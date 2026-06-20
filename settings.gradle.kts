@@ -4,6 +4,9 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
     }
+    plugins {
+        id("com.android.application") version "8.5.2"
+    }
 }
 dependencyResolutionManagement {
     repositories {
@@ -13,3 +16,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Tianyi"
 include(":app")
+
