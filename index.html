@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#f2f2f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<title>天意 · 梅花易数</title>
+<style>
+:root{
+  --bg:#f2f2f7; --bg2:#ffffff; --card:#ffffff; --card2:#f2f2f7;
+  --sep:rgba(60,60,67,.12); --sep2:rgba(60,60,67,.18);
+  --label:#1c1c1e; --label2:rgba(60,60,67,.6); --label3:rgba(60,60,67,.3);
+  --tint:#3f47b8; --tint-soft:#ececfb; --tint2:#8e8ed6;
+  --yang:#2a2d52; --yin:#2a2d52;
+  --good:#1f9d5c; --bad:#d2403a; --warn:#c98a14;
+  --bar:rgba(249,249,251,.82); --shadow:0 1px 3px rgba(0,0,0,.06),0 8px 30px rgba(0,0,0,.05);
+  --r:18px; --rs:12px;
+  --serif:"Songti SC","STSong","Noto Serif SC", "Source Han Serif SC",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Helvetica Neue",system-ui,"Microsoft YaHei",sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#000000; --bg2:#1c1c1e; --card:#1c1c1e; --card2:#2c2c2e;
+    --sep:rgba(84,84,88,.5); --sep2:rgba(84,84,88,.65);
+    --label:#ffffff; --label2:rgba(235,235,245,.6); --label3:rgba(235,235,245,.3);
+    --tint:#7e84ee; --tint-soft:#1f2042; --tint2:#5b5fb0;
+    --yang:#e9eaff; --yin:#e9eaff;
+    --good:#33d27e; --bad:#ff6961; --warn:#ffd426;
+    --bar:rgba(22,22,24,.8); --shadow:0 1px 2px rgba(0,0,0,.5);
+  }
+}
+html[data-theme="light"]{color-scheme:light;--bg:#f2f2f7;--bg2:#fff;--card:#fff;--card2:#f2f2f7;--sep:rgba(60,60,67,.12);--sep2:rgba(60,60,67,.18);--label:#1c1c1e;--label2:rgba(60,60,67,.6);--label3:rgba(60,60,67,.3);--tint:#3f47b8;--tint-soft:#ececfb;--tint2:#8e8ed6;--yang:#2a2d52;--yin:#2a2d52;--good:#1f9d5c;--bad:#d2403a;--warn:#c98a14;--bar:rgba(249,249,251,.82);--shadow:0 1px 3px rgba(0,0,0,.06),0 8px 30px rgba(0,0,0,.05);}
+html[data-theme="dark"]{color-scheme:dark;--bg:#000;--bg2:#1c1c1e;--card:#1c1c1e;--card2:#2c2c2e;--sep:rgba(84,84,88,.5);--sep2:rgba(84,84,88,.65);--label:#fff;--label2:rgba(235,235,245,.6);--label3:rgba(235,235,245,.3);--tint:#7e84ee;--tint-soft:#1f2042;--tint2:#5b5fb0;--yang:#e9eaff;--yin:#e9eaff;--good:#33d27e;--bad:#ff6961;--warn:#ffd426;--bar:rgba(22,22,24,.8);--shadow:0 1px 2px rgba(0,0,0,.5);}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;height:100%;}
+body{
+  font-family:var(--sans); background:var(--bg); color:var(--label);
+  -webkit-font-smoothing:antialiased; overscroll-behavior-y:none;
+  font-size:17px; line-height:1.45;
+}
+.app{max-width:600px;margin:0 auto;min-height:100%;position:relative;}
+
+/* ---- nav / large title ---- */
+.nav{position:sticky;top:0;z-index:50;background:var(--bar);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:.5px solid var(--sep);padding:calc(env(safe-area-inset-top) + 6px) 16px 8px;}
+.nav .row{display:flex;align-items:center;justify-content:space-between;min-height:30px;}
+.nav h1{font-size:20px;font-weight:700;margin:0;letter-spacing:.5px;}
+.nav .big{font-size:30px;font-weight:800;letter-spacing:1px;margin:2px 0 0;}
+.nav .sub{font-size:12.5px;color:var(--label2);margin-top:1px;letter-spacing:.3px;}
+.iconbtn{appearance:none;border:none;background:transparent;color:var(--tint);font-size:15px;font-weight:500;padding:6px;cursor:pointer;display:flex;align-items:center;gap:4px;}
+
+main{padding:14px 16px calc(96px + env(safe-area-inset-bottom));}
+.view{display:none;animation:fade .25s ease;}
+.view.active{display:block;}
+@keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
+
+/* ---- cards / list ---- */
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);margin:12px 0;overflow:hidden;}
+.card.pad{padding:16px 16px;}
+.sect-label{font-size:13px;color:var(--label2);font-weight:600;letter-spacing:.4px;margin:22px 4px 7px;text-transform:none;}
+.list{background:var(--card);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden;margin:0 0 4px;}
+.li{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:.5px solid var(--sep);cursor:pointer;min-height:44px;position:relative;transition:background .12s;}
+.li:last-child{border-bottom:none;}
+.li:active{background:var(--card2);}
+.li .t{flex:1;font-size:16px;}
+.li .v{color:var(--label2);font-size:15px;text-align:right;}
+.li .chev{color:var(--label3);font-size:17px;margin-left:2px;}
+.li .lead{font-size:21px;width:30px;text-align:center;color:var(--tint);}
+
+/* ---- segmented ---- */
+.seg{display:flex;background:var(--card2);border-radius:10px;padding:2px;gap:2px;margin:2px 0 4px;}
+.seg button{flex:1;appearance:none;border:none;background:transparent;color:var(--label);font-family:inherit;font-size:13px;font-weight:600;padding:7px 4px;border-radius:8px;cursor:pointer;white-space:nowrap;}
+.seg button.on{background:var(--bg2);box-shadow:0 1px 3px rgba(0,0,0,.12);}
+@media (prefers-color-scheme: dark){.seg button.on{background:#48484a;}}
+
+.scroller{display:flex;gap:8px;overflow-x:auto;padding:2px 0 6px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.scroller::-webkit-scrollbar{display:none;}
+.chip{flex:0 0 auto;appearance:none;border:.5px solid var(--sep2);background:var(--card);color:var(--label);font-family:inherit;font-size:13.5px;font-weight:600;padding:7px 14px;border-radius:999px;cursor:pointer;}
+.chip.on{background:var(--tint);color:#fff;border-color:var(--tint);}
+
+/* ---- inputs ---- */
+label.fld{display:block;font-size:13px;color:var(--label2);font-weight:600;margin:12px 2px 5px;}
+input.in,select.in,textarea.in{width:100%;font-family:inherit;font-size:16px;color:var(--label);background:var(--card2);border:.5px solid var(--sep);border-radius:11px;padding:11px 13px;outline:none;}
+input.in:focus,textarea.in:focus,select.in:focus{border-color:var(--tint);}
+textarea.in{resize:vertical;line-height:1.5;min-height:90px;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.hint{font-size:12.5px;color:var(--label2);line-height:1.5;margin:9px 2px 2px;}
+.hint b{color:var(--label);font-weight:600;}
+
+.btn{appearance:none;border:none;width:100%;font-family:inherit;font-size:17px;font-weight:600;color:#fff;background:var(--tint);border-radius:14px;padding:15px;cursor:pointer;margin-top:16px;letter-spacing:1px;transition:transform .08s,opacity .15s;}
+.btn:active{transform:scale(.985);opacity:.92;}
+.btn.sec{background:var(--card);color:var(--tint);box-shadow:var(--shadow);font-weight:600;}
+.btn.ghost{background:var(--tint-soft);color:var(--tint);}
+.btn.sm{font-size:15px;padding:12px;margin-top:10px;}
+
+/* ---- gua rendering ---- */
+.gua-wrap{display:flex;justify-content:space-around;align-items:flex-end;gap:8px;padding:6px 2px 2px;}
+.gua-col{display:flex;flex-direction:column;align-items:center;gap:9px;}
+.gua-col .cap{font-size:12px;color:var(--label2);font-weight:600;margin-bottom:2px;}
+.gua-stack{display:flex;flex-direction:column;gap:6px;}
+.yao{width:104px;height:13px;display:flex;gap:11px;}
+.yao .seg-y{flex:1;border-radius:3px;background:var(--yang);}
+.yao.yin .seg-y{flex:1;}
+.yao.dyn{position:relative;}
+.yao.dyn::after{content:"○";position:absolute;right:-19px;top:50%;transform:translateY(-50%);color:var(--bad);font-size:13px;font-weight:700;}
+.yao.ti .seg-y{background:var(--tint);}
+.yao.yong .seg-y{background:var(--tint2);}
+.reveal .yao{opacity:0;transform:translateY(10px);}
+.reveal.go .yao{opacity:1;transform:none;transition:opacity .42s ease,transform .42s cubic-bezier(.2,.8,.2,1);}
+@media (prefers-reduced-motion: reduce){.reveal .yao{opacity:1 !important;transform:none !important;transition:none !important;}}
+.gua-name{font-family:var(--serif);font-size:19px;font-weight:600;text-align:center;margin-top:4px;letter-spacing:1px;}
+.gua-sym{font-size:15px;color:var(--label2);text-align:center;margin-top:1px;}
+.tag{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:6px;letter-spacing:.5px;}
+.tag.ti{background:var(--tint);color:#fff;}
+.tag.yong{background:var(--tint2);color:#fff;}
+
+.kv{display:flex;justify-content:space-between;padding:11px 0;border-bottom:.5px solid var(--sep);font-size:15px;}
+.kv:last-child{border:none;}
+.kv .k{color:var(--label2);}
+.kv .vv{font-weight:600;text-align:right;}
+.rel-good{color:var(--good);font-weight:700;}
+.rel-bad{color:var(--bad);font-weight:700;}
+.rel-neu{color:var(--warn);font-weight:700;}
+
+.prose{font-family:var(--serif);font-size:16.5px;line-height:1.85;color:var(--label);}
+.prose.cls{font-size:16px;line-height:1.95;}
+.muted{color:var(--label2);font-size:13px;line-height:1.6;}
+.divider{height:.5px;background:var(--sep);margin:14px 0;}
+.hl{background:var(--tint-soft);color:var(--tint);border-radius:6px;padding:1px 5px;font-weight:600;font-family:var(--sans);font-size:14px;}
+
+.deepbox{border:1px dashed var(--tint2);border-radius:14px;padding:14px;margin-top:14px;background:linear-gradient(180deg,var(--tint-soft),transparent);}
+.deepbox .dh{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;color:var(--tint);}
+.spin{width:18px;height:18px;border:2.5px solid var(--tint-soft);border-top-color:var(--tint);border-radius:50%;animation:sp 0.7s linear infinite;display:inline-block;vertical-align:-3px;}
+@keyframes sp{to{transform:rotate(360deg);}}
+.collapse{font-size:13px;color:var(--tint);font-weight:600;cursor:pointer;margin-top:8px;display:inline-block;}
+pre.prompt{white-space:pre-wrap;word-break:break-word;font-family:ui-monospace,Menlo,monospace;font-size:11.5px;line-height:1.5;background:var(--card2);border-radius:10px;padding:12px;color:var(--label2);max-height:240px;overflow:auto;margin-top:8px;}
+
+/* ---- tab bar ---- */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:60;background:var(--bar);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-top:.5px solid var(--sep);display:flex;padding:6px 4px calc(4px + env(safe-area-inset-bottom));max-width:600px;margin:0 auto;}
+.tab{flex:1;appearance:none;border:none;background:transparent;color:var(--label2);font-family:inherit;font-size:10px;font-weight:500;padding:5px 2px 2px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px;letter-spacing:.3px;}
+.tab svg{width:25px;height:25px;}
+.tab.on{color:var(--tint);}
+
+/* trigram quick grid */
+.bg-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.bg-cell{background:var(--card);border-radius:16px;box-shadow:var(--shadow);padding:15px 14px;cursor:pointer;display:flex;align-items:center;gap:13px;transition:transform .1s;}
+.bg-cell:active{transform:scale(.97);}
+.bg-cell .sy{font-size:30px;line-height:1;color:var(--tint);}
+.bg-cell .nm{font-family:var(--serif);font-size:18px;font-weight:600;}
+.bg-cell .mt{font-size:12px;color:var(--label2);margin-top:2px;}
+
+/* sheet */
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;opacity:0;pointer-events:none;transition:opacity .25s;}
+.sheet-bg.show{opacity:1;pointer-events:auto;}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:101;background:var(--bg);border-radius:16px 16px 0 0;max-width:600px;margin:0 auto;transform:translateY(100%);transition:transform .32s cubic-bezier(.2,.85,.25,1);max-height:90vh;display:flex;flex-direction:column;}
+.sheet.show{transform:none;}
+.sheet .grab{width:36px;height:5px;background:var(--sep2);border-radius:3px;margin:8px auto 4px;flex:0 0 auto;}
+.sheet .shead{display:flex;align-items:center;justify-content:space-between;padding:6px 16px 10px;border-bottom:.5px solid var(--sep);flex:0 0 auto;}
+.sheet .shead .st{font-family:var(--serif);font-size:20px;font-weight:700;}
+.sheet .sbody{overflow-y:auto;padding:16px 16px calc(28px + env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch;}
+.close-x{appearance:none;border:none;background:var(--card2);color:var(--label2);width:30px;height:30px;border-radius:50%;font-size:16px;cursor:pointer;}
+
+.empty{text-align:center;color:var(--label2);padding:40px 20px;font-size:15px;line-height:1.7;}
+.empty .e-ico{font-size:40px;opacity:.4;margin-bottom:8px;}
+.badge{display:inline-block;font-size:11px;font-weight:700;color:var(--warn);border:1px solid var(--warn);border-radius:5px;padding:1px 6px;margin-left:6px;vertical-align:1px;}
+a.lnk{color:var(--tint);text-decoration:none;font-weight:600;}
+.prop-row{display:flex;padding:9px 0;border-bottom:.5px solid var(--sep);font-size:14.5px;gap:10px;}
+.prop-row:last-child{border:none;}
+.prop-row .pk{flex:0 0 56px;color:var(--label2);font-weight:600;}
+.prop-row .pv{flex:1;line-height:1.6;}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="nav" id="nav">
+    <div class="row">
+      <div>
+        <div class="big" id="navBig">天意</div>
+        <div class="sub" id="navSub">梅花易数 · 观象起卦</div>
+      </div>
+      <button class="iconbtn" id="themeBtn" title="主题">◐</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ============ 起卦 ============ -->
+    <section class="view active" id="v-cast">
+      <div class="card pad" style="margin-top:2px;">
+        <label class="fld" style="margin-top:0;">所占何事 · 来人所问</label>
+        <input class="in" id="i_question" type="text" placeholder="如：这桩生意能否谈成？／孩子今年升学如何？" autocomplete="off">
+        <div class="hint">先记下来人所问之事，再起卦。断辞与 AI 解卦将<b>针对此事而解</b>。</div>
+        <label class="fld">外应 · 占时所见所闻（可留空）</label>
+        <input class="in" id="i_ying" type="text" placeholder="如：忽闻鸦啼／云开见日／少女持物而过" autocomplete="off">
+        <div class="hint">梅花重外应。占时若有兆象（声、物、色、人、天象等），填此，<b>解卦将结合外应而断</b>。</div>
+      </div>
+      <div class="sect-label">起卦方式</div>
+      <div class="scroller" id="methodChips"></div>
+      <div class="card pad" id="methodPanel"></div>
+      <div id="resultArea"></div>
+    </section>
+
+    <!-- ============ 速查 ============ -->
+    <section class="view" id="v-lookup">
+      <div class="sect-label">八卦速查 · 点卦看类象</div>
+      <div class="bg-grid" id="baguaGrid"></div>
+      <div class="sect-label">五行 · 生克</div>
+      <div class="card pad">
+        <div class="prose" style="font-size:15.5px;line-height:2;">金生水，水生木，木生火，火生土，土生金。<br>金克木，木克土，土克水，水克火，火克金。</div>
+      </div>
+      <div class="sect-label">卦气旺衰</div>
+      <div class="card pad muted" style="line-height:2;">
+        震巽木旺于春，离火旺于夏，乾兑金旺于秋，坎水旺于冬，坤艮土旺于辰戌丑未月。<br>
+        衰：春坤艮、夏乾兑、秋震巽、冬离、辰戌丑未坎。
+      </div>
+    </section>
+
+    <!-- ============ 占断 ============ -->
+    <section class="view" id="v-div">
+      <div class="sect-label">十八类占断 · 体用生克之诀</div>
+      <div class="list" id="divList"></div>
+      <div class="muted" style="margin:10px 4px;">出《梅花易数·体用生克篇》。十八占为大事之切要，余事以类推之。</div>
+    </section>
+
+    <!-- ============ 原文 ============ -->
+    <section class="view" id="v-text">
+      <div class="sect-label">原文 · 梅花易数</div>
+      <div class="list" id="textList"></div>
+      <div class="muted" style="margin:10px 4px;">本版内置核心篇目与经典占例。<b style="color:var(--label)">全本《梅花易数》</b>将在正式 App 打包时完整内置。</div>
+    </section>
+
+    <!-- ============ 设置 ============ -->
+    <section class="view" id="v-set">
+      <div class="sect-label">AI 深度解卦 · DeepSeek</div>
+      <div class="card pad">
+        <label class="fld">DeepSeek API Key（仅存于本机，绝不上传）</label>
+        <input class="in" id="dsKey" type="password" placeholder="sk-..." autocomplete="off">
+        <div class="hint">没有 Key？前往 <a class="lnk" href="https://platform.deepseek.com" target="_blank" rel="noopener">platform.deepseek.com</a> 注册并充少量额度即可。设置后，排卦页会出现「AI 深度解卦」。</div>
+        <label class="fld" style="margin-top:18px;">解卦提示词（决定 AI 是否依梅花正法解卦，可自行修改）</label>
+        <textarea class="in" id="dsPrompt" rows="8"></textarea>
+        <button class="btn sm ghost" id="resetPrompt">恢复默认提示词</button>
+      </div>
+      <div class="sect-label">外观</div>
+      <div class="list">
+        <div class="li"><div class="t">主题</div>
+          <div class="seg" style="width:200px;margin:0;">
+            <button data-th="auto" class="on">自动</button>
+            <button data-th="light">浅色</button>
+            <button data-th="dark">深色</button>
+          </div>
+        </div>
+      </div>
+      <div class="sect-label">关于</div>
+      <div class="card pad muted" style="line-height:1.8;">
+        <b style="color:var(--label)">天意</b> · 第一版（测试）<br>
+        起卦、排卦、体用生克、旺衰、类象皆依宋·邵雍《梅花易数》。<br>
+        白话断语为依体用之法的自动归纳，仅供参证，请以卦理与外应自断。<br>
+        本机离线运行，不联网、不收集任何数据；仅「AI 深度解卦」需联网。
+      </div>
+    </section>
+  </main>
+
+  <nav class="tabbar" id="tabbar"></nav>
+</div>
+
+<!-- sheet -->
+<div class="sheet-bg" id="sheetBg"></div>
+<div class="sheet" id="sheet">
+  <div class="grab"></div>
+  <div class="shead"><div class="st" id="sheetTitle"></div><button class="close-x" id="sheetClose">✕</button></div>
+  <div class="sbody" id="sheetBody"></div>
+</div>
+
+<script>
+const MH = {
+ "xu": "清黄宗羲撰 宋庆历中，康节邵先生隐处山林，冬不炉，夏不扇，盖心在于《易》，忘乎其为寒暑也。犹以为未至，糊《易》于壁，心致而目玩焉。邃于《易》理，欲造《易》之数而未又征也。一日午睡，有鼠走而前，以所枕瓦枕投击之，鼠走而枕破。觉中有字，取视之：「此枕卖与贤人康节，某年月日某时，击鼠枕破。」先生怪而询之陶家，其陶枕者曰：「昔一人手执《周易》憩坐，举枕其书，必此老也。今不至久矣。吾能识其家。」先生偕陶往访焉，及门，则已不存矣，但遗书一册谓其家人曰：「某年某月某时，有一秀士至吾家，可以此书授之，能终吾身后事矣。」其家以书授先生，先生阅之，乃《易》之文，并有诀例。推例演数，谓其人曰：「汝父存日，有白金置睡床西北窖中，可以营葬事。」其家如言，果得金。先生受书以归，后观梅，以雀争胜，布算，知次晚有邻人女折花，堕伤其股。其卜盖始于此，后世相传，遂名《观梅数》。又后算落花之日，午时为马所践毁；又算西林寺额，知有阴人之祸。凡此，皆所谓先天之数也。盖未得卦先得数也。以数起卦，故曰后天。若夫见老人有忧色，卜而知老人有食鱼之祸；见少年有喜色，卜而知有婚聘之喜；闻鸡鸣，知鸡必烹；听牛鸣，知牛当杀。凡此，皆后天之数也。盖未得数先得卦也。以卦起数，故曰后天。一日，置一椅，以数推之，书椅底曰：「某年月日，当为仙客坐破。」之期，果有道者来访，坐破其椅。仙客愧谢，先生曰：「物之成毁有数，岂足介意，且公神仙也，幸坐以示教。」因举椅下所书以验，道者愕然趋起出，忽不见。乃知数之妙，虽鬼神莫逃，而况于人乎？况于物乎？",
+ "trigrams_detail": {
+  "干": {
+   "_hexagrams": [
+    "干为天",
+    "天风姤",
+    "天山遁",
+    "天地否",
+    "风地观",
+    "山地剥",
+    "火地晋",
+    "火天大有"
+   ],
+   "_props": {
+    "天时": "天、冰、雹、霰。",
+    "地理": "西北方、京都、大郡、形胜之地、高亢之所。",
+    "人物": "君、父、大人、老人、长者、官宦、名人、公门人。",
+    "人事": "刚健武勇、果决、多动少静、高上下屈。",
+    "身体": "首、骨、肺。",
+    "时序": "秋、九十月之交、戌亥年月日时、一四九年月日时。",
+    "动物": "马、天鹅、狮、象。",
+    "静物": "金玉、宝珠、圆物、水果、刚物、冠、镜。",
+    "屋舍": "公廨、楼台、高堂、大厦、驿舍、西北向之居。",
+    "家宅": "秋占宅兴隆、夏占有祸、冬占冷落、春占吉利。",
+    "婚姻": "贵官之眷、有声名之家、秋占宜成、冬夏占不利。",
+    "饮食": "马肉、珍味、多骨、肝肺、干肉、水果、诸物之首、圆物、辛辣之物。",
+    "生产": "易生、秋占生贵子，夏占有损，坐宜向西北。",
+    "求名": "有名、宜随朝内任、刑官、武职、掌权、天使、驿官、宜西北方之任。",
+    "谋旺": "有成、利公门、宜动中有财、夏占不成、冬占多谋少遂。",
+    "交易": "宜金、玉珍宝珠贵货、易成、夏占不利。",
+    "求利": "有财、金、玉之利、公门中得财、秋占大利、夏占损财、冬占无财。",
+    "出行": "利于出行、宜入京师、利西北之行、夏占不利。",
+    "谒见": "利见大人、有德行之人、宜见官贵、可见。",
+    "疾病": "头面之疾、肺疾、筋骨疾、上焦疾、夏占不安。",
+    "官讼": "健讼、有贵人助、秋占得胜、夏占失理。",
+    "坟墓": "宜向西北、宜干山气脉、宜天穴、宜高、秋占出贵、夏占大凶。",
+    "方道": "西北。",
+    "五色": "大赤色、玄色。",
+    "姓字": "带金旁者、商音、行位一四九。",
+    "数目": "一、四、九。",
+    "五味": "辛、辣。"
+   },
+   "_num": "一",
+   "_wuxing": "金"
+  },
+  "坤": {
+   "_hexagrams": [
+    "坤为地",
+    "地雷复",
+    "地泽临",
+    "地天泰",
+    "雷天大壮",
+    "泽天决",
+    "水天需",
+    "水地比"
+   ],
+   "_props": {
+    "天时": "云阴、雾气。",
+    "地理": "田野、乡里、平地、西南方。",
+    "人物": "老母、后母、农夫、乡人、众人、大腹人。",
+    "人事": "吝啬、柔顺、懦弱、众多。",
+    "身体": "腹、脾、胃、肉。",
+    "时序": "辰戌丑未月、未申年月日时、八五十月日。",
+    "静物": "方物、柔物、布帛、丝绵、五谷、舆釜、瓦器。",
+    "动物": "牛、百兽、牝马。",
+    "屋舍": "西南向、村居、田舍、矮屋、土阶、仓库。",
+    "家宅": "安稳、多阴气、春占宅舍不安。",
+    "饮食": "牛肉、土中之物、甘味、野味、五谷之味、芋笋之物、腹脏之物。",
+    "婚姻": "利于婚姻、宜税产之家、乡村之家、或寡妇之家、春占不利。",
+    "生产": "易产、春占难产、有损、或不利于母、坐宜西南方。",
+    "求名": "有名、宜西南方或教官、农官守土之职、春占虚名。",
+    "交易": "宜利交易、宜田土交易、宜五谷、利贱货、重物、布帛、静中有财、春占不利。",
+    "求利": "有利、宜土中之利、贱货重物之利、静中得财、春占无财、多中取利。",
+    "谋旺": "利求谋、乡里求谋、静中求谋、春占少遂、或谋于妇人。",
+    "出行": "可行、宜西南行、宜往乡里行、宜陆行、春占不宜行。",
+    "谒见": "可见、利见乡人、宜见亲朋或阴人、春不宜见。",
+    "疾病": "腹疾、脾胃之疾、饮食停伤、谷食不化。",
+    "官讼": "理顺、得众情、讼当解散。",
+    "坟墓": "宜向西南之穴、平阳之地、近田野、宜低葬、春不可葬。",
+    "姓字": "宫音、带土姓人、行位八五十。",
+    "数目": "八、五、十。",
+    "方道": "西南。",
+    "五味": "甘。",
+    "五色": "黄、黑。"
+   },
+   "_num": "八",
+   "_wuxing": "土"
+  },
+  "震": {
+   "_hexagrams": [
+    "震为雷",
+    "雷地豫",
+    "雷水解",
+    "雷风恒",
+    "地风升",
+    "水风井",
+    "泽风大过",
+    "泽雷随"
+   ],
+   "_props": {
+    "天时": "雷。",
+    "地理": "东方、树木、闹市、大途、竹林、草木茂盛之所。",
+    "人物": "长男。",
+    "人事": "起动、怒、虚惊、鼓动噪、多动少静。",
+    "身体": "足、肝、发、声音。",
+    "时序": "春三月、卯年月日时、四三八月日。",
+    "静物": "木竹、萑苇、乐器（属竹木者）、花草繁鲜之物。",
+    "动物": "龙、蛇。",
+    "屋舍": "东向之居、山林之处、楼阁。",
+    "家宅": "宅中不时有虚惊、春冬吉、秋占不利。",
+    "饮食": "蹄、肉、山林野味、鲜肉、果酸味、菜蔬。",
+    "婚姻": "可、有成、声名之家、得长男之婚、秋占不宜婚。",
+    "求利": "山林竹木之财、动处求财、或山林、竹木茶货之利。",
+    "求名": "有名、宜东方之任、施号发令之职、掌刑狱之官、竹茶木税课之任、或闹市司货之职。",
+    "生产": "虚惊、胎动不安、头胎必生男、坐宜东向、秋占必有损。",
+    "疾病": "足疾、肝经之疾、惊怖不安。",
+    "谋旺": "可旺、可求、宜动中谋、秋占不遂。",
+    "交易": "利于成交、秋占难成、动而可成、山林、木竹茶货之利。",
+    "官讼": "健讼、有虚惊、行移取甚反复。",
+    "谒见": "可见、在山林之人、利见宜有声名之人。",
+    "出行": "宜行、利于东方、利山林之人、秋占不宜行、但恐虚惊。",
+    "坟墓": "利于东向、山林中穴、秋不利。",
+    "姓字": "角音、带木姓人、行位四八三。",
+    "数目": "四、八、三。",
+    "方道": "东。",
+    "五味": "甘、酸味。",
+    "五色": "青、绿、碧"
+   },
+   "_num": "四",
+   "_wuxing": "木"
+  },
+  "巽": {
+   "_hexagrams": [
+    "巽为风",
+    "风天小畜",
+    "风火家人",
+    "风雷益",
+    "天雷无妄",
+    "火雷噬嗑",
+    "山雷颐",
+    "山风蛊"
+   ],
+   "_props": {
+    "天时": "风。",
+    "地理": "东南方之地、草木茂秀之所、花果菜园。",
+    "人物": "长女、秀士、寡妇之人、山林仙道之人。",
+    "人事": "柔和、不定、鼓舞、利市三倍、进退不果。",
+    "身体": "肱、股、气、风疾。",
+    "时序": "春夏之交、三五八之时月日、辰巳月日时。",
+    "静物": "木香、绳、直物、长物、竹木、工巧之器。",
+    "动物": "鸡、百禽、山林中之禽、虫。",
+    "屋舍": "东南向之居、寺观楼台、山林之居。",
+    "家宅": "安稳利市、春占吉、秋占不安。",
+    "饮食": "鸡肉、山林之味、蔬果酸味。",
+    "婚姻": "可成、宜长女之婚、秋占不利。",
+    "生产": "易生、头胎产女、秋占损胎、宜向东南坐。",
+    "求名": "有名、宜文职有风宪之力、宜为风宪、宜茶果竹木税货之职、宜东南之任。",
+    "求利": "有利三倍、宜山林之利、秋占不利、竹货木货之利。",
+    "交易": "可成、进退不一、利山林交易、山林木茶之利。",
+    "谋旺": "可谋旺、有财可成、秋占多谋少遂。",
+    "出行": "可行、有出入之利、宜向东南行、秋占不利。",
+    "谒见": "可见、利见山林之人、利见文人秀士。",
+    "疾病": "股肱之疾、风疾、肠疾、中风、寒邪、气疾。",
+    "姓字": "角音、草木旁姓氏、行位五三八。",
+    "官讼": "宜和、恐遭风宪之责。",
+    "坟墓": "宜东南方向、山林之穴、多树木、秋占不利。",
+    "数目": "五、三、八。",
+    "方道": "东南。",
+    "五味": "酸味。",
+    "五色": "青、绿、碧、洁白。"
+   },
+   "_num": "五",
+   "_wuxing": "木"
+  },
+  "坎": {
+   "_hexagrams": [
+    "坎为水",
+    "水泽节",
+    "水雷屯",
+    "水火既济",
+    "泽火革",
+    "雷火丰",
+    "地火明夷",
+    "地水师"
+   ],
+   "_props": {
+    "天时": "月、雨、雪、霜、露。",
+    "地理": "北方、江湖、溪涧、泉井、卑湿之地（沟渎、池沼、凡有水处）。",
+    "人物": "中男、江湖之人、舟人、资贼。",
+    "人事": "险陷卑下、外示以柔、内序以利、漂泊不成、随波逐流。",
+    "身体": "耳、血、肾。",
+    "时序": "冬十一月、子年月日时、一六月日。",
+    "静物": "水带子、带核之物、弓轮、矫揉之物、酒器、水具。",
+    "屋舍": "向北之居、近水、水阁、江楼、花酒长器、宅中混地之处。",
+    "饮食": "豕肉、酒、冷味、海味、汤、酸味、宿食、鱼、带血、掩藏、有带核之物、水中之物、多骨之物。",
+    "家宅": "不安、暗昧、防盗。",
+    "婚姻": "利中男之婚、宜北方之婚、辰戌丑未月婚不可。",
+    "生产": "难产有险、宜次胎、中男、辰戌丑未月有损、宜北向。",
+    "求名": "艰难、恐有灾险、宜北方之任、鱼盐河泊之职。",
+    "求利": "有财失、宜水边财、恐有失陷、宜鱼盐酒货之利、防遗失、防盗。",
+    "交易": "不利成交、恐防失陷、宜水边交易、宜鱼盐货之交易、或点水人之交易。",
+    "谋旺": "不宜谋旺、不能成就、秋冬占可谋旺。",
+    "出行": "不宜远行、宜涉舟、宜北方之行、防盗、恐遇险陷溺之事。",
+    "谒见": "难见、宜见江湖之人、或有水旁姓氏之人。",
+    "疾病": "耳痛、心疾、感寒、肾疾、胃冷、水泻、痼冷之病、血病。",
+    "官讼": "不利、有阴险、有失、因讼、失陷。",
+    "坟墓": "宜北向之穴、近水傍之墓、不利葬。",
+    "姓字": "羽音、点水旁之姓氏、行位一六。",
+    "数目": "一、六。",
+    "方道": "北方。",
+    "五味": "咸、酸。",
+    "五色": "黑。"
+   },
+   "_num": "六",
+   "_wuxing": "水"
+  },
+  "离": {
+   "_hexagrams": [
+    "离为火",
+    "火山旅",
+    "火风鼎",
+    "火水末济",
+    "山水蒙",
+    "风水涣",
+    "天水讼",
+    "天火同人"
+   ],
+   "_props": {
+    "天时": "日、电、虹、霓、霞。",
+    "地理": "南方、干亢之地、窖灶、炉冶之所、刚燥厥地、其地面阳。",
+    "人物": "中女、文人、大腹、目疾人、甲胄之士。",
+    "人事": "文画之所、聪明才学、相见虚心、书事。",
+    "身体": "目、心、上焦。",
+    "时序": "夏五月、午火年月日时、三二七日。",
+    "静物": "火、书、文、甲胄、干戈、槁衣、干燥之物、赤色之物。",
+    "动物": "雉、龟、鳖、蟹、螺、蚌。",
+    "屋舍": "南舍之居、阳明之宅、明窗、虚室。",
+    "家宅": "安稳、平善、冬占不安、克体主火灾。",
+    "饮食": "雉肉、煎炒、烧炙之物、干脯之体、热肉。",
+    "婚姻": "不成、利中女之婚、夏占可成、冬占不利。",
+    "生产": "易生、产中女、冬占有损、坐宜向南。",
+    "求名": "有名、宜南方之职、文官之任、宜炉冶亢场之职。",
+    "求利": "有财宜南方求、有文书之财、冬占有失。",
+    "谋旺": "可以谋旺、宜文书之事。",
+    "交易": "可成、宜有文书之交易。",
+    "出行": "可行、宜向南方、就文书之行、冬占不宜行、不宜行舟。",
+    "谒见": "可见南方人、冬占不顺、秋见文书考案之士。",
+    "官讼": "易散、文书动、辞讼明辨。",
+    "疾病": "目疾、心疾、上焦热病、夏占伏暑、时疫。",
+    "坟墓": "南向之幕、无树木之所、阳穴。夏占出文人、冬占不利。",
+    "姓字": "征音、立人旁士姓氏、行位三二七。",
+    "数目": "三、二、七。",
+    "方道": "南。",
+    "五色": "赤、紫、红。",
+    "五味": "苦。"
+   },
+   "_num": "三",
+   "_wuxing": "火"
+  },
+  "艮": {
+   "_hexagrams": [
+    "艮为山",
+    "山火贲",
+    "山天大畜",
+    "山泽损",
+    "火泽睽",
+    "天泽履",
+    "风泽中孚",
+    "风山渐"
+   ],
+   "_props": {
+    "天时": "云、雾、山岚。",
+    "地理": "山径路、近山城、丘陵、坟墓、东北方。",
+    "人物": "少男、闲人、山中人。",
+    "人事": "阻隔、守静、进退不决、反背、止住、不见。",
+    "身体": "手指、骨、鼻、背。",
+    "时序": "冬春之月、十二月丑寅年月日时、七五十数月日、土年月日时。",
+    "静物": "土石、瓜果、黄物、土中之物。",
+    "动物": "虎、狗、鼠、百兽、黔啄之物。",
+    "家宅": "安稳、诸事有阻、家人不睦、春占不安。",
+    "屋舍": "东北方之居、山居近石、近路之宅。",
+    "饮食": "土中物味、诸兽之肉、墓畔竹笋之属、野味。",
+    "婚姻": "阻隔难成、成亦迟、利少男之婚、春占不利、宜对乡里婚。",
+    "求名": "阻隔无名、宜东北方之任、宜土官山城之职。",
+    "求利": "求财阻隔、宜山林中取财、春占不利、有损失。",
+    "生产": "难生、有险阻之厄、宜向东北、春占有损。",
+    "交易": "难成、有山林田土之交易、春占有失。",
+    "谋旺": "阻隔难成、进退不决。",
+    "出行": "不宜远行、有阻、宜近陆行。",
+    "谒见": "不可见、有阻、宜见山林之人。",
+    "疾病": "手指之疾、脾胃之疾。",
+    "官讼": "贵人阻滞、官讼未解、牵连不决。",
+    "坟墓": "东北之穴、山中之穴、春占不利、近路旁有石。",
+    "数目": "五、七、十。",
+    "方道": "东北方。",
+    "五色": "黄。",
+    "五味": "甘。"
+   },
+   "_num": "七",
+   "_wuxing": "土"
+  },
+  "兑": {
+   "_hexagrams": [
+    "兑为金",
+    "泽水困",
+    "泽地萃",
+    "泽山咸",
+    "水山蹇",
+    "地山谦",
+    "雷山小过",
+    "雷泽归妹"
+   ],
+   "_props": {
+    "天时": "雨泽、新月、星。",
+    "地理": "泽、水际、缺池、废井、山崩破裂之地、其地为刚卤。",
+    "人物": "少女、妾、歌妓、伶人、译人、巫师。",
+    "人事": "喜悦、口、谗毁、谤说、饮食。",
+    "身体": "舌、口喉、肺、痰、涎。",
+    "时序": "秋八月、酉年月日时、二四九月日。",
+    "静物": "金刀、金类、乐器、废物、缺器。",
+    "动物": "羊、泽中之物。",
+    "屋舍": "西向之居、近泽之居、败墙壁宅、户有损。",
+    "家宅": "不安、防口舌、秋占喜悦、夏占家宅有祸。",
+    "饮食": "羊肉、泽中之物、宿味、辛辣之味。",
+    "婚姻": "不成、秋占可成、有喜、主成婚之吉、利婚少女、夏占不利。",
+    "生产": "不利、恐有损胎或则生女、夏占不利、宜坐向西。",
+    "求名": "难成、因名有损、利西之任、宜刑官、武职、伶官、译官。",
+    "求利": "无利、有损、财利、主口舌、秋占有财喜、夏占破财。",
+    "出行": "不宜远行、防口舌、或损失、宜西行、秋占宜行有利。",
+    "交易": "难利、防口舌、有争竞、夏占不利、秋占有交易之财。",
+    "谋旺": "难成、谋中有损、秋占有喜、夏占不遂。",
+    "谒见": "利行西方、见有咒诅。",
+    "疾病": "口舌、咽喉之疾、气逆喘疾、饮食不飧。",
+    "坟墓": "宜西向、防穴中有水、近泽之墓、夏占不宜、或葬废穴。",
+    "官讼": "争讼不已、曲直未决、因讼有损、防刑、秋占为体得理胜讼。",
+    "姓字": "商音、带口带金字旁姓氏、行位四二九。",
+    "数目": "四、二、九。",
+    "方道": "西方。",
+    "五色": "白。",
+    "五味": "辛、辣。"
+   },
+   "_num": "二",
+   "_wuxing": "金"
+  }
+ },
+ "tiyong": {
+  "干": {
+   "生体": "则主公门中有喜益，或功名上有喜，或因官有财，或问讼得理，或有金宝之利，或有老人进财，或尊长惠送，或有官贵之喜。",
+   "克体": "主有公事之忧，或门户之忧，或有财宝之失，或于金谷有损，或有怒于尊长，或得罪于贵人。"
+  },
+  "坤": {
+   "生体": "主有田土之喜，或有田土进财，或得乡人之益，或得阴人之利，或有果谷之利，或有布帛之喜。",
+   "克体": "主有田土之忧，或于田土有损，或有阴人之侵，或有小人之害，或失布帛之财，或丧谷粟之利。"
+  },
+  "震": {
+   "生体": "则主山林之益，或因山林得财，或进东方之财，或因动中有喜，或有木货交易之利，或因草木姓氏人称心。",
+   "克体": "主有虚惊，常多恐惧，或身心不能安静，或家宅见妖灾，或草木姓氏之人相侵，或于山林有所失。"
+  },
+  "巽": {
+   "生体": "亦主山林之益，或因山林得财，或于东南得财，或因草木姓人而进利，或以茶果得利，或有茶果菜蔬之喜。",
+   "克体": "亦有草木姓人相害，或于山林上生忧。谋事，乃东南方之人；处家，忌阴人小口之厄。"
+  },
+  "坎": {
+   "生体": "有北方之喜，或受北方之财，或水边人进利，或因点水人称心，或有因鱼盐酒货文书交易之利，或有馈送鱼盐酒之喜。",
+   "克体": "主有险陷之事，或寇盗之忧，或失意于水边人，或生灾于酒后，或点水人相害，或北方人见殃。"
+  },
+  "离": {
+   "生体": "宜服热药；坎卦生体，宜服冷药，如艮温补；干、兑凉药是也。",
+   "克体": "主文书之忧，或失火之惊，或有南方之忧，或火人相害。"
+  },
+  "艮": {
+   "生体": "有东北方之财，或山田之喜，或因山林田土获财，或得宫音带土人之财。物当安稳，事有终始。",
+   "克体": "诸事多违，百谋中阻。或有山林田土之失，或带土人相侵，防东北方之祸害，或忧坟墓不当。"
+  },
+  "兑": {
+   "生体": "有西方之财，或喜悦事，或有食物金玉货利之源，或商音之人，或带口之人欣逢，或主宾之乐，或朋友讲习之事。",
+   "克体": "不利西方，主口舌事之纷争。或带口人侵欺，或有毁折之患，或因饮食而生忧。生克不逢，则止以本卦而论之。"
+  }
+ },
+ "divination": [
+  {
+   "key": "天时占第一",
+   "name": "天时",
+   "text": "凡占天时，不分体用，全观诸卦，详推五行。离多主晴，坎多主雨，坤乃阴晦，干主晴明，震多则春夏雷轰，巽多则四时风烈，艮多则久雨必晴，兑多则不雨亦阴。夏占离多而无坎，则亢旱炎炎。冬占坎多而无离，则雨雪飘飘。 全观诸卦者，谓互变卦。五行属离属火，主晴；坎为水，主雨；坤为地气，主阴；干为天，主晴明；震为雷，巽为风，秋冬震多无制，亦有非常之雷，有巽佐之，则为风撼雷动之应；艮为山云之气，若雨久，得艮则当止。艮者，止也，亦土克水之义。兑为泽，故不雨亦阴。夫以造化之辨固难测，理数之妙亦可凭，是以干象乎天，四时晴明；坤体乎地，一气惨然。干、坤两同，晴雨时变。坤、艮两并，阴晦不常。卜数有阳有阴，卦象有奇有偶。阴雨阳晴，奇偶暗重。坤为老阴之极，久晴必雨；干为老阳之极，久雨必晴。若逢重坎重离，亦日时晴时雨。坎为水，必雨；离为火，必晴。干、兑为金，秋明晴；坎之水，冬雪凛冽；坤、艮之土，春雨泽，夏火炎蒸。《易》曰：「云从龙，风从虎」。又曰：「艮为云，巽为风。」艮、巽重逢，风云际会，飞沙走石，蔽日藏山，不以四时，不必二用。坎在艮上，布雾兴云，若在兑上，凝霜作雪。干、兑为霜雪雹霰，离火为日电虹霓。离为电，震为雷，重会而雷电俱作。坎为雨，巽为风，相逢而风雨骤兴。震卦重逢，雷惊百里。坎爻迭见，润泽九垓。故卦体之两逢，亦爻象之总断。地天泰，水天需，昏蒙之象。天地否，水地比，黑暗之形。爻纯离，夏必旱，四季皆晴。爻纯坎，冬必寒，四时必雨。久雨不晴，逢艮必止。久晴不雨，得此亦然。又若水火既济、火水未济，四时不测风云；风泽中孚，泽风大过，三冬必然雨雪。水山蹇，山水蒙，百步必须执盖。地风升，风地观，四时不可行船。离在艮上，暮雨朝晴，离互艮宫，暮晴朝雨。巽、坎互离，虹霞乃见，巽、离互坎，造化亦同。又须推测四时，不可执迷一理。震、离为电、为雷，应在夏天，干、兑为霜、为雪，验于冬月。天地之理大矣哉！得斯文者，当敬宝之。"
+  },
+  {
+   "key": "人事占第二",
+   "name": "人事",
+   "text": "人事之占，详观体用。体卦为主，用卦为宾。用克体不宜，体克用则吉。用生体有进益之喜，体生用有耗失之患。体用比和，谋为吉利。更详观互卦、变卦，以断吉凶；复究盛衰，以明休咎。 人事之占，则以全体用总章向决吉凶。若有生体之卦，即看前章八卦中生体之卦有何吉；又看克体之卦有何凶，即看前章克体之卦。无生克，止断本卦。"
+  },
+  {
+   "key": "家宅占第三",
+   "name": "家宅",
+   "text": "凡占家宅，以体为主，用为家宅。体克用，则家宅多吉，用克体，则家宅多凶。体生用，多耗散，或防失盗之忧。用生体，多进益，或有馈送之喜。体用比和，家宅安稳。如有生体之卦，即以前章人事占断之。"
+  },
+  {
+   "key": "屋舍占第四",
+   "name": "屋舍",
+   "text": "凡占屋舍，以体为主，用为屋舍。体克用，居之吉，用克体，居之凶。体生用，主资财衰退；用生体，则门户兴隆。体用比和，自然安稳。"
+  },
+  {
+   "key": "婚姻占第五",
+   "name": "婚姻",
+   "text": "占婚姻以体为主，用为婚姻。用生体，婚易成，或因婚有得；体生用，婚难成，或因婚有失。体克用，可成但成之迟；用克体，不可成，成亦有害。体用比和，婚姻吉利。 占婚，体为所占之家，用为所婚之家。体卦旺，则此家门户胜；用卦旺，则彼家资盛。生体，则得婚姻之财；或彼有相就之意；体生，则无嫁奁之资，或此去求婚方谐。若体用比和，则彼此相就，良配无疑。 干：端正而长 坎：邪淫、黑色、嫉妒、奢侈 艮：色黄多巧 震：美貌难犯 巽：发少稀疏，丑陋心贪 离：短赤色，性不常 坤：貌丑，大腹而黄 兑：高长，语话喜悦，白色"
+  },
+  {
+   "key": "生产占第六",
+   "name": "生产",
+   "text": "占生产，以体为母，用为生。体用俱宜乘旺，不宜乘衰。宜相生，不宜相克。体克用不利于子；用克体不利于母。体克用而用卦衰，则子难完；用克体而体卦衰，则母难保。用生体，利于母；体生用，利于子。体用比和，生育顺快。若欲辨其男女，当于前卦审之。阳卦阳爻多者则生男，阴卦阴爻多者生女。阴阳卦爻相生，则察所占左右人之奇偶以证之。如欲决其日辰，则以用卦之气数参决之。所谓卦之气数者，即看何为用卦，于八卦时序之类次之。"
+  },
+  {
+   "key": "饮食占第七",
+   "name": "饮食",
+   "text": "凡占饮食，以体为主，用为饮食。用生体，饮食必丰；体生用，饮食难就。体克用，则饮食有阻；用克体，饮食必无。体用比和，饮食丰足。又卦中有坎则有酒，有兑则有食。无坎无兑，则皆无。兑、坎生体，酒肉醉饱。欲知所食何物，以饮食推之。欲知席上何人，以互卦人事推之。 饮食人事类者，即前八卦内万物属类是也。"
+  },
+  {
+   "key": "求谋占第八",
+   "name": "求谋",
+   "text": "占求谋，以体为主，用为所谋之事。体克用，谋虽可成，但成迟。用克体，求谋不成，谋亦有害。用生体。不谋而成；体生用，多谋少遂。体用比和，求谋称意。"
+  },
+  {
+   "key": "求名占第九",
+   "name": "求名",
+   "text": "凡占求名，以体为主，用为名。体克用，名可成，但成迟。用克体，名不可成。体生用，名不可就，或因名有丧。用生体，名易成，或因名有得。体用比和，功名称意。欲知名成之日，生体之卦气详之。欲知职任之处，变卦之方道决之。若无克体之卦，则名易就，止看卦体时序之类，以定日期。若在任占卜，最忌见克体之卦，如卦有克体者，即居官见祸，轻则上司责罚，重则削官退居。其日期，看克体之卦气者，于八卦所属时序类中断之。"
+  },
+  {
+   "key": "求财占第十",
+   "name": "求财",
+   "text": "占求财，以体为主，以用为财。体克用，有财；用克体，无财。体生用，财有损耗之忧；用生体，财有进益之喜。体用比和，财利快意。欲知得财之日，生体之卦气定之。欲知破财之日，克体卦气定之。 又若卦中有体克用之卦，及生体之卦，则有财，此卦气即见财之日。若卦中有克体之卦，及体生用之卦，即破财，此卦气破财之日。"
+  },
+  {
+   "key": "交易占第十一",
+   "name": "交易",
+   "text": "占交易，以体为主，用为财。体克用，有财；用克体，不成。体生用，难成，或因交易有失。用生体，即成，成必有财。体用比和，易成。"
+  },
+  {
+   "key": "出行占第十二",
+   "name": "出行",
+   "text": "占出行，以体为主，用为所行之应。体克用，可行，所至多得意。用克体，出则有祸。体生用，出行有破耗之失；用生体，有意外之财。体用比和，出行顺快。 又凡出行，体宜乘旺，诸卦宜生体。体卦干、震多，主动。坤、艮多，不动。巽宜舟行，离宜陆行。坎妨失脱，兑主纷争。"
+  },
+  {
+   "key": "行人占第十三",
+   "name": "行人",
+   "text": "占行人，以体为主，用为行人。体克用，行人归迟；用克体，行人不归。体生用，行人未归；用生体，行人即归。体用比和，归期不日矣。 又以用卦看行人在外之情况。逢生，在外顺快；逢衰受克，在外灾殃。震多不宁，艮多有阻。坎有险难，兑主纷争。"
+  },
+  {
+   "key": "谒见占第十四",
+   "name": "谒见",
+   "text": "占谒见，以体为主，用为所见之人。体克用，可见；用克体，不见。体生用，难见，见之而无益；用生体，可见，见之且有得。体用比和，欢然相见。"
+  },
+  {
+   "key": "失物占第十五",
+   "name": "失物",
+   "text": "占失物，以体为主，用为失物。体克用，可寻迟得；用克体，不可寻。体生用，物难见；用生体，物易寻。体用比和，物不失矣。 又以变卦为失物之所在。如变是干，则觅于西北或公榭楼阁之所，或金石之傍，或圆器之中，或高亢之地。变卦是坤，则觅于西南方，或田野之所，或仓禀之处，或稼穑之处，或土窖穴藏之所，或瓦器方器之中。震则寻于东方，或山林之所，或丛棘之内，钟鼓之傍，或闹市之地，或大途之所。巽则寻于东南方，或山林之所，或寺观之地，或菜蔬之园，或舟居之间，或木器之内。坎则寻于北方，多藏于水边或溪井沟渠之处，或酒醋之边，或鱼盐之地。离则寻于南方，或疱厨之间，或炉冶之傍，或在明窗，或遗虚室，或在文书之侧，或在烟火之地。艮则寻于东北方，或山林之内，或近路边，或岩石傍，或藏土穴。兑则寻于西方，或居泽畔，或败垣破壁之内，或废井缺沼之中。"
+  },
+  {
+   "key": "疾病占第十六",
+   "name": "疾病",
+   "text": "凡占疾病，以体为病人，用为病症。体卦宜旺不宜衰，体宜逢生，不宜见克。用宜生体，不宜克体。体克用，病易安；体生用，病难愈。体克用者，勿药有喜；用克体者，虽药无功。若体逢克而乘旺，犹为庶几。体遇克而更衰，断无存日。欲知凶中有救，生体之卦存焉。体生用者，迁延难好；用生体者，即愈。体用比和，疾病易安。若究和平之日，主卦决之。若详危厄之期，克体之卦定之。若论医药之属，当看生体之卦。如离卦生体，宜服热药；坎卦生体，宜服冷药，如艮温补；干、兑凉药是也。 又有信鬼神之说，虽非《易》道，然不可谓《易》道之不该。姑以理推之。如卦有克体者，即可测其鬼神。干卦克体，主有西北方之神，或兵刀之鬼，或天行时气，或乘正之邪神。坤则西南之神，或旷野之鬼，或连亲之鬼，或水土里社之神，或犯方隅，或无主之祟。震则东方之神，或木下之神，或妖怪百端，或影响时见。巽则东南之鬼，或自缢戕生，或枷锁致命。坎则北方之鬼，或水旁之神，或没溺而亡，或血疾之鬼。离则南方之鬼，或猛勇之神，或犯灶司，或得衍于香火，或焚烧之鬼。或遇热病而亡。艮则东北之神，或是山林之祟，或山魈木客，或土怪石精。兑则西方之神，或阵亡之鬼，或废疾之鬼，或刎颈戕生之鬼。卦中无克体之卦者，不必论之。 又问干上坤下，占病如何断，尧夫曰：「干上坤下第一爻动，便是生体之义。变为震木，互见巽艮，俱是生成之义，是谓不灾，逢生之日即愈。」 又问：「第二爻动如何？」曰：「是变为坎水，乃泄体败金之义。金入水乡，互见巽、离，乃为风火扇炉，俱为克体之义。更看占时外应如何，即为焚尸之象，断之死无疑矣。以春夏秋冬四季推之，更见详理。」又曰：「第三爻动，坤变艮土，俱在生体之义，不问互卦，亦断其吉无疑。」又曰：「第四爻动，干变巽木，金木俱有克体之义，互吉亦凶。木有扛尸之义，金为砖椁之推。是必定之推，必定之理。」又曰：「第五爻动，干变离，反能生体，互变俱生体，是其吉无疑。更有吉兆则愈吉。其断明矣。」又曰：「第六爻动，干变兑，则能泄体，互见巽、艮，一凶一吉，其病非死必危。亦宜看兆吉凶，吉则言吉，凶则言凶。此断甚明。余卦皆仿此断，则心易无不验矣。」"
+  },
+  {
+   "key": "官讼占第十七",
+   "name": "官讼",
+   "text": "占官讼，以体为主，用为对辞之人与官讼之应。体卦宜旺，用卦宜衰。体宜用生，不宜生用。宜生体，不宜克体。是故体克用者，已胜人；用克体者，人胜己。体生用，非为失理，或因官有所丧；用生体，不止得理，或因讼有所得。体用比和，官讼最吉。非但扶持之力，必有主和之义。"
+  },
+  {
+   "key": "坟墓占第十八",
+   "name": "坟墓",
+   "text": "占坟墓以体为主，用为坟墓。体克用，葬之吉；用克体，葬之凶。体生用，葬之主运退；用生体，葬之主兴隆，有荫益后嗣。体用比和，乃为吉地。大宜葬，葬之吉昌。"
+  }
+ ],
+ "wanwu_simple": {
+  "干": "天、父、老人、官贵、头、骨、马、金宝、珠玉、水果、圆物、冠、镜、刚物、大赤色、水寒。",
+  "坤": "地、母、老妇、土、牛、金、布帛、文章、舆辇、方物、柄、黄色、瓦器、腹、裳、黑色、黍稷、书、米、谷。",
+  "震": "雷、长男、足、发、龙、百虫、蹄、竹、萑苇、马鸣、馵足、的颡、稼、乐器之类、草木、青碧绿色、树、木核、柴、蛇。",
+  "巽": "风、长女、僧尼、鸡、股、百禽、百草、臼、香气、臭、绳、眼、羽毛、帆、扇、枝叶之类、仙道工匠、直物、工巧之器。",
+  "坎": "水、雨、雪、工、豕、中男、沟渎、弓轮、耳、血、月、盗、宫律、栋、丛棘、狐、蒺藜、桎梏、水族、鱼、盐、酒、醢、有核之物、黑色。",
+  "离": "火、雉、日、目、电、霓霞、中女、甲胄、戈兵、文书、槁木、炉、兽、鳄龟蟹蚌、凡有壳之物、红赤紫色、花纹人、干燥物。",
+  "艮": "山、土、少男、童子、狗、手指、径路、门阙、果、蓏、阍寺、鼠、虎、狐、黔喙之属、木生之物、藤生之物、爪、鼻。黄色。",
+  "兑": "泽、少女、巫、舌、妾、肺、羊、毁折之物、带口之器、属金者、废缺之物、奴仆、婢。"
+ },
+ "leixiang_simple": {
+  "干": "玄黄、大赤色、金玉、宝珠、镜、狮、圆物、木果、贵物、冠、象、马、天鹅、刚物。",
+  "坎": "水、带子带核之物、豕鱼、弓轮、水具、水中之屋、盐、酒、黑色。",
+  "艮": "土石、黄色、虎、狗、土中之物、瓜果、百禽、鼠、黔喙之属。",
+  "震": "竹木、青碧绿色、龙、蛇、  苇、竹木乐器、草、蕃鲜之物。",
+  "巽": "木、蛇、长物、青碧绿色、山木之禽鸟、、香、鸡、直物、竹木之器、工巧之器。",
+  "离": "火、文书、干戈、雉、龟、蟹、槁木、甲胄、螺、蚌、鳖、赤色。",
+  "坤": "土、方物、五谷、柔物、丝绵、百禽、牛、布帛、舆、金、瓦器、黄色。",
+  "兑": "金刃、金器、乐器、泽中之物、白色、有口缺之物、羊。"
+ },
+ "examples": [
+  {
+   "title": "观梅占",
+   "text": "辰年十二月十七日申时，康节先生偶观梅，见二雀争枝坠地。先生曰：「不动不占，不因事不占。今二雀争枝坠地，怪也。」因占之，辰年五数，十二月十二数，十七日十七数，共三十四数，除四八三十二，余二，属兑，为上卦，加申时九数，总得四十三数，五八除四十，余得三数，为离，作下卦。又上下总四十三数，以六除，六七四十二，余一为动爻，是为泽火革。初爻变咸，互见干巽。 断之曰：「详此卦，明晚当有女子折花，园丁不知而逐之，女子失惊坠地，逐伤其股。右兑金为体，离火克之。互中巽木，复三起离火，则克体之卦气盛。兑为少女，因知女子之被伤，而互中巽木，又逢干金兑金克之，则巽木被伤，而巽为股，故有伤股之应。幸变为艮土，兑金得生，知女子但被伤，而不至凶危也。」（年月日时占例）"
+  },
+  {
+   "title": "牡丹占",
+   "text": "巳年三月十六日卯时，先生与客往司马公家共观牡丹。时值花开甚盛，客曰：「花盛如此，亦有数乎？」先生曰：「莫不有数。且因问而可占矣。」逐占之。以巳年六数，三月三数，十六日十六数，总得二十五数，除三八二十四数，余一数为干，为上卦。卯时四数，共得二十九数，又除三八二十四数，余五为巽卦，作下卦，得天风姤。又以总计二十九数，以六除之，四六除二十四，得五爻动，变鼎卦，互见重干。逐与客曰：「怪哉，此花明日午时，当为马所践毁。」众客愕然不信，次日午时，果有贵官观牡丹，二马相啮，群至花间驰骤，花尽为之践毁。 断之曰：「巽木为体，干金克之，互卦又见重干，克体之卦多矣，卦中无生意，固知牡丹必为践毁。所谓马者，干为马也。午时者，离明之象，是以知之也。」"
+  },
+  {
+   "title": "邻夜扣门借物占",
+   "text": "冬夕酉时，先生方拥炉，有扣门者，初扣一声而止，继而又扣五声，且云借物。先生令勿言，令其子占之所借何物。以一声属干为上卦，以五声属巽为下卦，又以一干五巽共六数，加酉时数共得十六数，以六除之，二六一十二，得天风姤。第四爻变巽卦，互见重干。卦中三干金，二巽木，为金木之物也，又以干金短，而巽木长，是借斧也。 子乃断曰：「金短木长者，器也，所借锄也。」先生曰：「非也。必斧也。」闻之，果借斧，其子问何故？先生曰：「起数又须明理。以卦推之，斧亦可也，锄亦可也；以理推之，夕晚安用锄？必借斧。盖斧切于劈柴之用耳。推数又须明理，为卜占之切要也。推数不推理，是不得也。学数者志之！」（系闻声占例）"
+  },
+  {
+   "title": "今日动静如何",
+   "text": "有客问曰：「今日动静如何？」逐将此六字占之。以乎分「今日动」三字为上卦。「今」平声，一数；「日」入声，四数；「动」去声，三数，共八数，得坤为上卦。以「静如何」为下卦，「静」去声，三数；「如」平声，一数；「何」平声，一数，共五数，得巽，为下卦。又以八五总为十三数，除二六一十二，余得一数，为地风升。初爻动，变泰卦，互见震、兑。逐为客曰：「今日有人相请，客不多，酒不醉，味至黍鸡而已。」至晚果然。 断曰：「升者，有升阶之义，互震、兑，有东西席之分。卦中兑为口，坤为腹，为口腹之事，故知有人相请。客不多者，坤土独立，无同类之卦气也。酒不醉，卦中无坎。味止黍鸡者，坤为黍稷耳。盖卦无相生之义，故知酒不多，食品不丰也。」（系声音占例）"
+  },
+  {
+   "title": "西林寺牌额占",
+   "text": "先生偶见西林寺之额，「林」字无两勾，因占之，以西字七画为艮，作上卦；以林八画为坤，作下卦。以上七画下八画总十五画，除二六一十二，余数得三，是山地剥卦。第三爻动，变艮，互见重坤。 断曰：寺者，纯阳之所居，今卦得重阴之爻，而又有群阴剥阳之兆。详此，则寺中当有阴人之祸。询之果然，逐谓寺僧曰：「何不添‘林’字两勾，则自然无阴人之祸矣。」僧信然，即添‘林’字两勾，寺果无事。 又，纯阳之人，所居得纯阴之卦，故不吉。又有群阴剥阳之义，故有阴人之祸。若添「林」字两勾，则十画，除八得二为兑卦，合上艮，是为山泽损。第五爻变，动为中孚卦，互卦见坤、震，损者益之，用互俱生体，为吉卦。可以得安矣。 以上并是先得数，以数起卦，所谓先天之数也。（系字画占例）"
+  },
+  {
+   "title": "老人有忧色占",
+   "text": "己丑日卯时，偶在途行，有老人往巽方，有忧色。问其何以有忧，曰无。怪而占之，以老人属干为上卦，巽方为下卦，是天风姤；又以干一巽五之数，加卯时四数，总十数，除六得四为动爻，是为天风姤之九四。《易》曰：「包无鱼，起凶。」是易辞不吉矣。以卦论之，巽木为体，干金克之，互卦又见重干，俱是克体，并无生气，且时在途行，其应速。逐以成卦之数中分而取其半，谓老人虫：「汝于五日内谨慎出入，恐有重祸。」果五日，此老赴吉席，因鱼骨鲠而终。 又凡占卜，克应之期看自己之动静，以决事之迟速，故行则应速，以逐成卦之数，中分而取其半也。坐则事应迟，当倍其成卦之数而定之也。立则半迟半速，止以成卦之数定之可也。虽然如是，又在变通，如占牡丹及观梅之类，则二日花皆朝夕之故，岂特成数之久也。（端法占例）"
+  },
+  {
+   "title": "少年有喜色占",
+   "text": "壬申日午时，有少年从离方来，喜形于色，问有何喜，曰无。逐占之，以少年属艮为上卦，离为下卦，得山火贲。以艮七离三加午时七，总十七数，除十二，余五为动爻，贲之六五爻曰：「贲于丘园，束帛戋戋，吝，终吉。」易辞已吉矣。卦则贲之家人，互见震、坎，离为体，互变俱生之。断曰：子于十七日内必有聘币之喜。至期，果然定亲。"
+  },
+  {
+   "title": "牛哀鸣占",
+   "text": "癸卯日午时，有牛鸣于坎方，声极悲，因占之。牛属坤，为上卦，坎方为下卦。坎六坤八，加午时七，共二十一数，除三六一十八，三爻动得地水师之三爻。《易辞》曰：「师或舆尸，凶。」卦则师变升，互坤、震，乃坤为体，互变俱克之，并无生气。 断曰：此牛二十一日内必遭屠杀。后二十日，人果买此牛，杀以犒众，悉皆异之。"
+  },
+  {
+   "title": "鸡悲鸣占",
+   "text": "甲申日卯时，有鸡鸣于干方，声极悲怆，因占之。鸡属巽，为上卦，干方为下卦，得风天小畜。以巽五干一共六数，加卯时四数，总十数，除六得四，爻动变干，是为小畜之六四。《易》曰：「有孚，血去惕出，无咎。」推之，割鸡之义。卦则小畜之干，互见离、兑。干金为体，离火克之。卦中巽木离火，有烹饪之象。 断曰：此鸡十日当烹。果十日客至，有烹鸡之验。"
+  },
+  {
+   "title": "枯枝坠地占",
+   "text": "戊子日辰时，偶行至中途，有树蔚然，无风，枯枝自坠地于兑方。占之，槁木为离，作上卦，兑方为下卦，得火泽睽。以兑二离三，加辰时五数，总十数，去六余四，变山泽损，是睽之九四。《易》曰：「睽孤，遇元夫。」卦火泽睽变损，互见坎、离，兑金为体，离火克之，且睽损卦名，俱有伤残之义。 断曰：此树十日当伐。果十日，伐树起公榭，而匠者适字「元夫」也。 以上诸占例，并是先得卦，以卦起数，所谓后天之数也。"
+  }
+ ]
+};
+
+/* ================= 八卦核心 ================= */
+// 卦数 → 名/爻(自下而上,1阳0阴)/五行/卦象符
+const GUA = {
+ 1:{n:'乾',k:'干',lines:[1,1,1],wx:'金',sym:'☰',img:'天'},
+ 2:{n:'兑',k:'兑',lines:[1,1,0],wx:'金',sym:'☱',img:'泽'},
+ 3:{n:'离',k:'离',lines:[1,0,1],wx:'火',sym:'☲',img:'火'},
+ 4:{n:'震',k:'震',lines:[1,0,0],wx:'木',sym:'☳',img:'雷'},
+ 5:{n:'巽',k:'巽',lines:[0,1,1],wx:'木',sym:'☴',img:'风'},
+ 6:{n:'坎',k:'坎',lines:[0,1,0],wx:'水',sym:'☵',img:'水'},
+ 7:{n:'艮',k:'艮',lines:[0,0,1],wx:'土',sym:'☶',img:'山'},
+ 8:{n:'坤',k:'坤',lines:[0,0,0],wx:'土',sym:'☷',img:'地'},
+};
+const NAME2NUM={乾:1,干:1,兑:2,离:3,震:4,巽:5,坎:6,艮:7,坤:8};
+// 后天八卦方位 → 卦数
+const DIR=[['南',3],['北',6],['东',4],['西',2],['东南',5],['东北',7],['西南',8],['西北',1]];
+const ZHI=['子','丑','寅','卯','辰','巳','午','未','申','酉','戌','亥'];
+const SHI=[['子(23-1)',1],['丑(1-3)',2],['寅(3-5)',3],['卯(5-7)',4],['辰(7-9)',5],['巳(9-11)',6],['午(11-13)',7],['未(13-15)',8],['申(15-17)',9],['酉(17-19)',10],['戌(19-21)',11],['亥(21-23)',12]];
+const lineKey=a=>a.join('');
+const LINES2NUM={};Object.keys(GUA).forEach(n=>LINES2NUM[lineKey(GUA[n].lines)]=+n);
+
+// 六十四卦名 [上卦数][下卦数]
+const G64={
+ 1:{1:'乾为天',2:'天泽履',3:'天火同人',4:'天雷无妄',5:'天风姤',6:'天水讼',7:'天山遁',8:'天地否'},
+ 2:{1:'泽天夬',2:'兑为泽',3:'泽火革',4:'泽雷随',5:'泽风大过',6:'泽水困',7:'泽山咸',8:'泽地萃'},
+ 3:{1:'火天大有',2:'火泽睽',3:'离为火',4:'火雷噬嗑',5:'火风鼎',6:'火水未济',7:'火山旅',8:'火地晋'},
+ 4:{1:'雷天大壮',2:'雷泽归妹',3:'雷火丰',4:'震为雷',5:'雷风恒',6:'雷水解',7:'雷山小过',8:'雷地豫'},
+ 5:{1:'风天小畜',2:'风泽中孚',3:'风火家人',4:'风雷益',5:'巽为风',6:'风水涣',7:'风山渐',8:'风地观'},
+ 6:{1:'水天需',2:'水泽节',3:'水火既济',4:'水雷屯',5:'水风井',6:'坎为水',7:'水山蹇',8:'水地比'},
+ 7:{1:'山天大畜',2:'山泽损',3:'山火贲',4:'山雷颐',5:'山风蛊',6:'山水蒙',7:'艮为山',8:'山地剥'},
+ 8:{1:'地天泰',2:'地泽临',3:'地火明夷',4:'地雷复',5:'地风升',6:'地水师',7:'地山谦',8:'坤为地'},
+};
+const SHENG={金:'水',水:'木',木:'火',火:'土',土:'金'};
+const KE={金:'木',木:'土',土:'水',水:'火',火:'金'};
+
+// 五行关系（以体为参照）
+function relTo(tiWx, otherWx){
+  if(tiWx===otherWx) return {t:'比和',c:'good',d:'比和'};
+  if(SHENG[otherWx]===tiWx) return {t:'生体',c:'good',d:'生体'};   // 它生体
+  if(KE[otherWx]===tiWx) return {t:'克体',c:'bad',d:'克体'};      // 它克体
+  if(SHENG[tiWx]===otherWx) return {t:'体生',c:'neu',d:'体生（泄）'};// 体生它
+  if(KE[tiWx]===otherWx) return {t:'体克',c:'good',d:'体克'};      // 体克它
+  return {t:'—',c:'neu',d:'—'};
+}
+// 卦气旺衰（按月令；月用所输月份，1-12 视为农历月近似）
+function wangShuai(wx, month){
+  let wang,shuai;
+  if([3,6,9,12].includes(month)){wang='土';shuai='水';}
+  else if([1,2].includes(month)){wang='木';shuai='土';}
+  else if([4,5].includes(month)){wang='火';shuai='金';}
+  else if([7,8].includes(month)){wang='金';shuai='木';}
+  else {wang='水';shuai='火';}  // 10,11
+  if(wx===wang) return {t:'旺',c:'good'};
+  if(wx===shuai) return {t:'衰',c:'bad'};
+  return {t:'平',c:'neu'};
+}
+const mod=(x,m)=>{const r=x%m;return r===0?m:r;};
+
+/* ================= 起卦引擎 ================= */
+// upper/lower = 卦数; moving 1-6 (自下而上); month 用于旺衰
+function deriveHexagram(upper, lower, moving, month){
+  const six=[...GUA[lower].lines, ...GUA[upper].lines]; // 爻1..6 自下而上
+  // 变卦
+  const ben={upper,lower,six};
+  const changed=six.slice(); changed[moving-1]=changed[moving-1]?0:1;
+  const bLower=LINES2NUM[lineKey(changed.slice(0,3))], bUpper=LINES2NUM[lineKey(changed.slice(3,6))];
+  const bian={upper:bUpper,lower:bLower,six:changed};
+  // 互卦：上互=爻3,4,5 下互=爻2,3,4 ；乾坤纯卦无互→互变卦
+  function huFrom(s){const lo=LINES2NUM[lineKey([s[1],s[2],s[3]])], up=LINES2NUM[lineKey([s[2],s[3],s[4]])];return{upper:up,lower:lo,six:[s[1],s[2],s[3],s[2],s[3],s[4]]};}
+  let hu=huFrom(six), huNote='';
+  if((upper===1&&lower===1)||(upper===8&&lower===8)){hu=huFrom(changed);huNote='（乾坤无互，取变卦之互）';}
+  // 体用：动爻在下卦(1-3)→下为用上为体；在上卦(4-6)→上为用下为体
+  const lowerIsYong = moving<=3;
+  const tiNum = lowerIsYong?upper:lower;
+  const yongNum = lowerIsYong?lower:upper;
+  const tiWx=GUA[tiNum].wx;
+  // 关系：用、体互、用互、变卦 → 对体
+  // 体互/用互：体卦所在半边对应的互（下互属下卦半、上互属上卦半）
+  const tiIsLower = !lowerIsYong;
+  const tiHu = tiIsLower? hu.lower : hu.upper;   // 体之互
+  const yongHu = tiIsLower? hu.upper : hu.lower;  // 用之互
+  const bianTrig = lowerIsYong? bian.lower : bian.upper; // 动爻所在卦之变
+  return {ben,bian,hu,huNote,moving,upper,lower,tiNum,yongNum,lowerIsYong,
+    rel:{
+      用:relTo(tiWx,GUA[yongNum].wx),
+      体互:relTo(tiWx,GUA[tiHu].wx),
+      用互:relTo(tiWx,GUA[yongHu].wx),
+      变:relTo(tiWx,GUA[bianTrig].wx),
+    },
+    parts:{tiHu,yongHu,bianTrig},
+    ws: month? wangShuai(tiWx,month):null,
+  };
+}
+
+/* ================= 渲染卦象 ================= */
+function yaoHTML(val, role, dyn){
+  let cls='yao'+(val?'':' yin')+(role?(' '+role):'')+(dyn?' dyn':'');
+  if(val) return `<div class="${cls}"><div class="seg-y"></div></div>`;
+  return `<div class="${cls}"><div class="seg-y"></div><div class="seg-y"></div></div>`;
+}
+// 渲染一个重卦列；six 自下而上；体/用 by lowerIsYong; movingAbs 1-6
+function hexColHTML(title, six, upper, lower, opt){
+  opt=opt||{};
+  const name = G64[upper][lower];
+  let rows='';
+  for(let i=5;i>=0;i--){ // 自上而下显示
+    let role='';
+    if(opt.markTiYong){ const inLower=i<3; const isYong = opt.lowerIsYong?inLower:!inLower; role=isYong?'yong':'ti'; }
+    const dyn = opt.moving && (i+1)===opt.moving;
+    rows+=yaoHTML(six[i], role, dyn);
+  }
+  return `<div class="gua-col"><div class="cap">${title}</div>
+    <div class="gua-stack">${rows}</div>
+    <div class="gua-name">${name}</div>
+    <div class="gua-sym">${GUA[upper].img}上 · ${GUA[lower].img}下</div></div>`;
+}
+
+/* ================= 断卦：白话归纳 ================= */
+function buildReading(d, category, question){
+  const ti=GUA[d.tiNum], yong=GUA[d.yongNum];
+  const tiHu=GUA[d.parts.tiHu], yongHu=GUA[d.parts.yongHu], bianT=GUA[d.parts.bianTrig];
+  const tyTxt=(num,kind)=>{const t=MH.tiyong&&MH.tiyong[GUA[num].k];return t?(t[kind]||''):'';};
+  const prop=(num,f)=>{const t=MH.trigrams_detail&&MH.trigrams_detail[GUA[num].k];return t&&t._props?(t._props[f]||''):'';};
+  const matter=(category&&category!=='（不限）')?category:'所占之事';
+
+  // 1. 总断（吉凶大势）
+  const r=d.rel.用; let verdict, gist;
+  switch(r.t){
+    case '生体': verdict='吉'; gist=`用卦${yong.n}（${yong.wx}）生体卦${ti.n}（${ti.wx}），事来生我、外助及身，<b>${matter}多顺遂可成</b>，每有他人相帮或意外之得，宜把握进取。`;break;
+    case '克体': verdict='凶'; gist=`用卦${yong.n}（${yong.wx}）克体卦${ti.n}（${ti.wx}），事来克我、阻力在外，<b>${matter}多耗损阻逆</b>，不宜强求妄进，须防外来之扰与小人之害。`;break;
+    case '体生': verdict='平·偏耗'; gist=`体卦${ti.n}（${ti.wx}）生用卦${yong.n}（${yong.wx}），我反去生事、心力外泄，<b>${matter}多谋少遂、出多入少</b>，纵成亦费周折，宜量力而为。`;break;
+    case '体克': verdict='小吉'; gist=`体卦${ti.n}（${ti.wx}）克用卦${yong.n}（${yong.wx}），我能制事、主动在己，<b>${matter}可成，惟稍迟而费力</b>，持之终能掌控。`;break;
+    default: verdict='吉'; gist=`体用同为${ti.wx}、比和相得，<b>${matter}吉利安稳</b>，彼此相就、阻力不大，顺势而行即可。`;
+  }
+  let yongImg='';
+  if(r.t==='生体'){const tx=tyTxt(d.yongNum,'生体');if(tx)yongImg='得益之象：'+tx;}
+  else if(r.t==='克体'){const tx=tyTxt(d.yongNum,'克体');if(tx)yongImg='受克之象：'+tx;}
+
+  // 2. 强弱（旺衰）
+  let wsTxt='';
+  if(d.ws){
+    if(d.ws.t==='旺') wsTxt=`体卦${ti.n}当令而<b>旺</b>，自身有气、根基壮实；吉则愈吉，纵逢克亦能支撑周旋。`;
+    else if(d.ws.t==='衰') wsTxt=`体卦${ti.n}当令而<b>衰</b>，自身力弱，最喜他卦生扶；若再逢克则力不能支，凡事宜守不宜进。`;
+    else wsTxt=`体卦${ti.n}气<b>平</b>，不旺不衰，吉凶强弱主要取决于生克向背。`;
+  }
+
+  // 3. 过程（互卦）
+  let procTxt=`互卦为事之中段、过程曲折所在——下互${tiHu.n}、上互${yongHu.n}。`;
+  const pn=[];
+  if(d.rel.体互.t==='生体') pn.push(`互中${tiHu.n}生体，过程有助力暗护，或得贵人、或有转机`);
+  else if(d.rel.体互.t==='克体') pn.push(`互中${tiHu.n}克体，中途有阻碍波折，谨防节外生枝`);
+  if(d.rel.用互.t==='生体') pn.push(`用之互${yongHu.n}亦生体，助力再添`);
+  else if(d.rel.用互.t==='克体') pn.push(`用之互${yongHu.n}亦克体，阻力叠加，过程更须谨慎`);
+  procTxt+= pn.length? pn.join('；')+'。' : '于体卦生克不显，过程大体平顺，无大起落。';
+
+  // 4. 结果趋向（变卦）
+  let resTxt=`变卦为事之结局趋向——${bianT.n}（${bianT.wx}）。`;
+  if(d.rel.变.t==='生体'){resTxt+='变而生体，<b>结局向好</b>，苦尽甘来、终得其益。';const tx=tyTxt(d.parts.bianTrig,'生体');if(tx)resTxt+='应象：'+tx;}
+  else if(d.rel.变.t==='克体'){resTxt+='变而克体，<b>结局转差</b>，纵中途顺利，终恐有失，宜早防备、见好即收。';const tx=tyTxt(d.parts.bianTrig,'克体');if(tx)resTxt+='应象：'+tx;}
+  else if(d.rel.变.t==='比和'){resTxt+='变与体比和，结局平稳，守成可安。';}
+  else if(d.rel.变.t==='体生'){resTxt+='体生变卦，事终仍须再费心力，了犹未了。';}
+  else {resTxt+='体克变卦，终能制之，收束在我掌握。';}
+
+  // 5. 类象引申（紧扣所问之事）
+  let leiTxt=''; const f=mapCatToProp(category);
+  const tiP=prop(d.tiNum,f), yongP=prop(d.yongNum,f);
+  if(category&&category!=='（不限）'&&(tiP||yongP)){
+    leiTxt=`就<span class="hl">${category}</span>论：`;
+    if(tiP) leiTxt+=`体（我方）主「${tiP}」`;
+    if(yongP) leiTxt+=`${tiP?'；':''}用（事方）主「${yongP}」`;
+    leiTxt+='。';
+  }
+
+  // 6. 应期 · 方位
+  const yongShi=prop(d.yongNum,'时序'), keyFang=prop(d.parts.bianTrig,'方道')||prop(d.yongNum,'方道');
+  let timeTxt='';
+  if(yongShi) timeTxt+='应期参考（用卦时序）：'+yongShi+'　';
+  if(keyFang) timeTxt+='方位参考：'+keyFang;
+  const timeRule = (verdict==='凶')?'凶应之期以克体之卦气推之':'吉应之期以生体之卦气推之';
+
+  return {verdict, gist, yongImg, wsTxt, procTxt, resTxt, leiTxt, timeTxt, timeRule, question:question||'', relType:r.t};
+}
+// 占类 → 详表属类字段
+function mapCatToProp(cat){
+  const m={'求财':'求利','婚姻':'婚姻','疾病':'疾病','家宅':'家宅','求名':'求名','出行':'出行',
+    '生产':'生产','交易':'交易','谋望':'谋旺','谒见':'谒见','官讼':'官讼','坟墓':'坟墓','饮食':'饮食','失物':'静物','行人':'人事','天时':'天时'};
+  return m[cat]||'人事';
+}
+function tiProp(num, field){const k=GUA[num].k;const t=MH.trigrams_detail&&MH.trigrams_detail[k];return t&&t._props?t._props[field]:'';}
+
+const CATS=['（不限）','求财','婚姻','疾病','家宅','求名','谋望','出行','生产','交易','谒见','官讼','坟墓','行人','失物','饮食','天时'];
+
+// 据所问之事的关键词，自动定位占类
+function guessCat(q){
+  const map=[
+   ['婚姻',['婚','嫁','娶','恋','对象','姻缘','男友','女友','结婚','离婚','感情','相亲','分手','复合','提亲']],
+   ['疾病',['病','疾','医','痛','健康','身体','手术','住院','症','治','吃药','康复','体检','发烧']],
+   ['求名',['考','试','学','升学','高考','中考','面试','录取','功名','职称','学业','成绩','应聘','晋升','名次']],
+   ['官讼',['官司','讼','诉','纠纷','案','法院','起诉','报警','打官司','仲裁','坐牢','判','律师']],
+   ['失物',['丢','遗失','不见','找回','钱包','失窃','被偷','东西没了','寻物','落下','掉了']],
+   ['行人',['回来','归来','在外','出走','失联','联系不上','走失','何时回','音讯','远方','未归']],
+   ['生产',['怀孕','胎','分娩','生孩子','临盆','生男','生女','待产','孕','顺产']],
+   ['坟墓',['坟','墓','葬','祖坟','安葬','阴宅','立碑','下葬']],
+   ['谒见',['拜访','求人','谒','约见','想见','能见到','找他','见面','求见']],
+   ['交易',['成交','合同','签约','谈判','买房','卖房','谈成','合作','下单','买卖','成交否','生意']],
+   ['出行',['出行','出门','旅','远行','搬迁','出差','旅游','搬家','移居','启程','行程']],
+   ['家宅',['家宅','房子','住','风水','家里','宅子','装修','阳宅','安居']],
+   ['天时',['天气','下雨','晴','雨','雪','刮风','天时','旱','涝','气候']],
+   ['求财',['财','钱','利','赚','投资','收入','薪','工资','债','股','发财','营业','分红','盈利']],
+   ['谋望',['谋','能不能成','成不成','可否','打算','计划','想做','行不行','顺不顺','如何','怎样','吉凶']],
+  ];
+  for(const [cat,kws] of map){ if(kws.some(k=>q.includes(k))) return cat; }
+  return null;
+}
+// 外应：据所见所闻识别其八卦/五行与吉凶兆象（形物·验色·声音·物象·吉凶之法）
+const YING_MAP=[
+ [1,['老人','老者','父亲','官员','贵人','长官','圆','金属','金器','玉','宝物','镜','马','天鹅','头','钟表','硬币','车']],
+ [2,['少女','姑娘','女子','女孩','妹','羊','开口','说话','讲话','唱','歌声','笑语','缺口','破','毁','折','损','刀','口舌','婢','妾']],
+ [3,['火','太阳','日头','阳光','电','闪电','红','赤','紫','花','文书','书','信','雉','龟','蟹','灯','光','烟火','炉','干燥','明亮','焰']],
+ [4,['雷','轰','震动','响动','龙','竹','青色','绿','足','脚','树','鼓','乐器','大声','爆','虫']],
+ [5,['风','长女','鸡','禽','飞鸟','草','香','绳','飘','长条','枝','叶','摇曳','僧','尼']],
+ [6,['水','雨','雪','河','沟','溪','井','猪','鱼','盐','酒','黑色','月','血','耳','潮','湿','流','弓','狐']],
+ [7,['山','石','土块','少男','男孩','童子','狗','道路','门','鼠','虎','果','鼻','手','岩','径']],
+ [8,['土地','田','母亲','老妇','老太','妇人','妇女','牛','布帛','布匹','绸','棉','黄色','众人','人群','大腹','瓦器','谷','米','平地','裳']],
+];
+function guessYing(t){
+  let gua=null;
+  for(const [g,ks] of YING_MAP){ if(ks.some(k=>t.includes(k))){gua=g;break;} }
+  const ji=['云开','见日','放晴','晴','喜鹊','鹊','报喜','喜','笑','欢','嘹亮','圆满','完整','祥','乐声','歌','开花','花开','明朗','清','吉庆','迎'];
+  const xiong=['乌鸦','鸦','悲','哀','哭','泣','雾','烟雾','阴沉','破','缺','残','坠','落地','跌','折断','死','凶','晦暗','裂','逐','惊'];
+  let tone=null;
+  if(ji.some(k=>t.includes(k))) tone='吉';
+  if(xiong.some(k=>t.includes(k))) tone='凶'; // 凶象当慎，若兼见以凶为戒
+  return {gua,tone};
+}
+// 外应解读片段（结果页 / 提示词共用）
+function yingReading(d){
+  const c=lastCast; if(!c.ying) return null;
+  const gy=guessYing(c.ying); const parts=[]; let relObj=null;
+  if(gy.gua){ const yg=GUA[gy.gua]; relObj=relTo(GUA[d.tiNum].wx, yg.wx);
+    parts.push({txt:`外应或属 <b>${yg.n}</b> 卦（${yg.wx}），于体卦${GUA[d.tiNum].n}（${GUA[d.tiNum].wx}）为「${relObj.d}」`,cls:relObj.c, plain:`外应或属${yg.n}卦·${yg.wx}，于体为${relObj.d}`}); }
+  if(gy.tone){ parts.push({txt:`兆象偏 <b>${gy.tone}</b>`,cls:gy.tone==='吉'?'good':'bad', plain:`兆象偏${gy.tone}`}); }
+  return {gy,parts,relObj};
+}
+
+// 起卦演算（取余过程，供核对）
+function calcRows(){
+  const c=lastCast.calc, d=lastDerive;
+  const r8=x=>{const r=x%8;return r===0?`${x} ÷8 余 0 ·取8`:`${x} ÷8 余 ${r}`;};
+  const r6=x=>{const r=x%6;return r===0?`${x} ÷6 余 0 ·取6`:`${x} ÷6 余 ${r}`;};
+  return `<div class="kv"><span class="k">上卦</span><span class="vv" style="font-variant-numeric:tabular-nums;">${r8(c.usum)} → ${GUA[d.upper].n}</span></div>
+    <div class="kv"><span class="k">下卦</span><span class="vv" style="font-variant-numeric:tabular-nums;">${r8(c.lsum)} → ${GUA[d.lower].n}</span></div>
+    <div class="kv"><span class="k">动爻</span><span class="vv" style="font-variant-numeric:tabular-nums;">${r6(c.msum)} → 第 ${d.moving} 爻</span></div>`;
+}
+
+/* ================= 起卦页 ================= */
+const METHODS=[
+ {id:'time',name:'时间起卦',sub:'先天 · 年月日时'},
+ {id:'num',name:'数字起卦',sub:'报数 · 上下两数'},
+ {id:'obj',name:'物数·声音',sub:'物数/声音 + 时'},
+ {id:'word',name:'字占',sub:'字数分卦 · 笔画'},
+ {id:'meas',name:'丈尺·尺寸',sub:'度量起卦'},
+ {id:'hou',name:'后天端法',sub:'物 + 方位 + 时'},
+ {id:'obsv',name:'观象起卦',sub:'为人/自己 · 取象'},
+];
+let curMethod='time';
+let lastCast=null, lastDerive=null, curCat='（不限）';
+
+function nowParts(){
+  const dt=new Date();
+  const y=dt.getFullYear();
+  const zhiIdx=((y-4)%12+12)%12;
+  const h=dt.getHours();
+  const shiIdx=Math.floor(((h+1)%24)/2);
+  return {yearZhi:zhiIdx, month:dt.getMonth()+1, day:dt.getDate(), shi:shiIdx+1, shiIdx};
+}
+
+function renderMethodChips(){
+  document.getElementById('methodChips').innerHTML=METHODS.map(m=>
+    `<button class="chip ${m.id===curMethod?'on':''}" data-m="${m.id}">${m.name}</button>`).join('');
+}
+function selOptions(arr,sel){return arr.map((o,i)=>`<option value="${o[1]}" ${o[1]==sel?'selected':''}>${o[0]}</option>`).join('');}
+
+function renderMethodPanel(){
+  const np=nowParts(); const P=document.getElementById('methodPanel');
+  let h='';
+  if(curMethod==='time'){
+    h=`<label class="fld">年（地支）</label>
+       <select class="in" id="i_year">${ZHI.map((z,i)=>`<option value="${i+1}" ${i===np.yearZhi?'selected':''}>${z}年（${i+1}）</option>`).join('')}</select>
+       <div class="grid2"><div><label class="fld">月（农历 1-12）</label><input class="in" id="i_month" type="number" min="1" max="12" value="${np.month}"></div>
+       <div><label class="fld">日（1-30）</label><input class="in" id="i_day" type="number" min="1" max="30" value="${np.day}"></div></div>
+       <label class="fld">时辰</label><select class="in" id="i_shi">${selOptions(SHI,np.shi)}</select>
+       <div class="hint">已按当前时间预填（年支由公历年推算）。<b>农历月/日可按需调整</b>以求精确。上卦=(年+月+日)÷8，下卦=(年+月+日+时)÷8，动爻=总数÷6。</div>`;
+  }else if(curMethod==='num'){
+    h=`<div class="grid2"><div><label class="fld">上卦数</label><input class="in" id="i_u" type="number" min="1" placeholder="如 5"></div>
+       <div><label class="fld">下卦数</label><input class="in" id="i_l" type="number" min="1" placeholder="如 12"></div></div>
+       <div class="hint">各以八除取余定卦（余0作8/坤），动爻=两数之和÷6。适合「报数占」「随机起卦」。</div>`;
+  }else if(curMethod==='obj'){
+    h=`<label class="fld">物数 / 声数</label><input class="in" id="i_n" type="number" min="1" placeholder="可数之物的数目，或闻声次数">
+       <label class="fld">时辰</label><select class="in" id="i_shi">${selOptions(SHI,np.shi)}</select>
+       <div class="hint">所得数作上卦，时数配下卦，动爻=(数+时)÷6。见可数之物、或闻动物鸣叫/敲击之声皆可。</div>`;
+  }else if(curMethod==='word'){
+    h=`<label class="fld">字 / 词句</label><input class="in" id="i_word" type="text" placeholder="输入所占之字，如「今日动静如何」" oninput="splitWord()">
+       <div id="wordSplit" class="hint"></div>
+       <div class="grid2"><div><label class="fld">上卦 · 笔画合数</label><input class="in" id="i_su" type="number" min="1" placeholder="上半部笔画"></div>
+       <div><label class="fld">下卦 · 笔画合数</label><input class="in" id="i_sl" type="number" min="1" placeholder="下半部笔画"></div></div>
+       <div class="hint">字占以<b>笔画</b>起卦：字数匀则平分上下、不匀则少为上多为下；上、下各以八除定卦，动爻=总笔画÷6。请按上方分组填入对应笔画。</div>`;
+  }else if(curMethod==='meas'){
+    h=`<div class="seg" style="margin-bottom:8px;"><button class="on" data-ms="zhang" onclick="setMeas('zhang')">丈尺占</button><button data-ms="cun" onclick="setMeas('cun')">尺寸占</button></div>
+       <div class="grid2"><div><label class="fld" id="ml1">丈数（上卦）</label><input class="in" id="i_m1" type="number" min="0"></div>
+       <div><label class="fld" id="ml2">尺数（下卦）</label><input class="in" id="i_m2" type="number" min="0"></div></div>
+       <div id="measShi"></div>
+       <div class="hint" id="measHint">丈数为上卦，尺数为下卦，动爻=(丈+尺)÷6，寸数不用。</div>`;
+  }else if(curMethod==='hou'){
+    h=`<label class="fld">物象（上卦）</label>
+       <select class="in" id="i_wu">${[1,2,3,4,5,6,7,8].map(n=>`<option value="${n}">${GUA[n].n}（${GUA[n].img}）— ${(MH.wanwu_simple&&MH.wanwu_simple[GUA[n].k]||'').slice(0,14)}…</option>`).join('')}</select>
+       <label class="fld">方位（下卦）</label>
+       <select class="in" id="i_dir">${DIR.map(d=>`<option value="${d[1]}">${d[0]}方 — ${GUA[d[1]].n}</option>`).join('')}</select>
+       <label class="fld">时辰</label><select class="in" id="i_shi">${selOptions(SHI,np.shi)}</select>
+       <div class="hint">后天端法：以物为上卦、来意方位为下卦，动爻=(物数+方位数+时数)÷6。</div>`;
+  }else if(curMethod==='obsv'){
+    const opts=n=>[1,2,3,4,5,6,7,8].map(x=>`<option value="${x}">${GUA[x].n}（${GUA[x].img}）</option>`).join('');
+    h=`<label class="fld">上卦 · 所观之象</label><select class="in" id="i_ou">${opts()}</select>
+       <label class="fld">下卦 · 所观之象 / 方位</label><select class="in" id="i_ol">${opts()}</select>
+       <label class="fld">时辰</label><select class="in" id="i_shi">${selOptions(SHI,np.shi)}</select>
+       <div class="hint">为人/自己占，以所观之象起卦：<b>人品</b>老人乾·少女兑；<b>取身</b>头乾·足震·目离；<b>服色</b>青衣震·赤衣离；<b>触物</b>见水坎·见火离。动爻=(上+下+时)÷6。</div>`;
+  }
+  P.innerHTML=h+`<button class="btn" id="castBtn">起　卦</button>`;
+  document.getElementById('castBtn').onclick=doCast;
+}
+function setMeas(t){document.querySelectorAll('[data-ms]').forEach(b=>b.classList.toggle('on',b.dataset.ms===t));
+  measMode=t;
+  document.getElementById('ml1').textContent=t==='zhang'?'丈数（上卦）':'尺数（上卦）';
+  document.getElementById('ml2').textContent=t==='zhang'?'尺数（下卦）':'寸数（下卦）';
+  document.getElementById('measHint').textContent=t==='zhang'?'丈数为上卦，尺数为下卦，动爻=(丈+尺)÷6，寸数不用。':'尺数为上卦，寸数为下卦，动爻=(尺+寸+时)÷6，分数不用。';
+  const ms=document.getElementById('measShi');
+  ms.innerHTML = t==='cun'? `<label class="fld">时辰</label><select class="in" id="i_shi">${selOptions(SHI,nowParts().shi)}</select>`:'';
+}
+let measMode='zhang';
+function splitWord(){
+  const w=document.getElementById('i_word').value.replace(/[\s，。、,.!?！？]/g,'');
+  const n=[...w].length; const el=document.getElementById('wordSplit');
+  if(!n){el.innerHTML='';return;}
+  const chars=[...w]; let up,lo;
+  if(n===1){el.innerHTML=`<b>一字</b>：取字之左为上卦笔画、右为下卦笔画（楷书）。`;return;}
+  const rule={2:[1,1],3:[1,2],5:[2,3],7:[3,4],9:[4,5]};
+  let s;
+  if(rule[n]) s=rule[n][0]; else s=Math.floor(n/2); // 平分（偶数及其他）
+  up=chars.slice(0,s).join(''); lo=chars.slice(s).join('');
+  el.innerHTML=`<b>${cn(n)}字</b>分卦：上「${up}」· 下「${lo}」。请分别数其笔画填入下方。`;
+}
+function cn(n){return ['零','一','二','三','四','五','六','七','八','九','十','十一'][n]||n;}
+
+function valShi(){const e=document.getElementById('i_shi');return e?+e.value:nowParts().shi;}
+function doCast(){
+  let upper,lower,moving,month=nowParts().month,label='',inputs='';
+  let usum=0,lsum=0,msum=0;
+  const g=id=>document.getElementById(id);
+  try{
+  if(curMethod==='time'){
+    const yz=+g('i_year').value, mo=+g('i_month').value, dy=+g('i_day').value, sh=+g('i_shi').value;
+    if(!mo||!dy) return toast('请填月、日');
+    month=mo;
+    upper=mod(yz+mo+dy,8); lower=mod(yz+mo+dy+sh,8); moving=mod(yz+mo+dy+sh,6);
+    usum=yz+mo+dy; lsum=yz+mo+dy+sh; msum=yz+mo+dy+sh;
+    label='时间起卦'; inputs=`${ZHI[yz-1]}年 ${mo}月 ${dy}日 ${SHI[sh-1][0].split('(')[0]}时`;
+  }else if(curMethod==='num'){
+    const u=+g('i_u').value,l=+g('i_l').value;
+    if(!u||!l) return toast('请填上、下卦数');
+    upper=mod(u,8); lower=mod(l,8); moving=mod(u+l,6);
+    usum=u; lsum=l; msum=u+l;
+    label='数字起卦'; inputs=`上数 ${u}、下数 ${l}`;
+  }else if(curMethod==='obj'){
+    const num=+g('i_n').value, sh=valShi();
+    if(!num) return toast('请填物数/声数');
+    upper=mod(num,8); lower=mod(sh,8); moving=mod(num+sh,6);
+    usum=num; lsum=sh; msum=num+sh;
+    label='物数·声音占'; inputs=`数 ${num} + ${SHI[sh-1][0].split('(')[0]}时`;
+  }else if(curMethod==='word'){
+    const su=+g('i_su').value,sl=+g('i_sl').value;
+    if(!su||!sl) return toast('请填上、下笔画数');
+    upper=mod(su,8); lower=mod(sl,8); moving=mod(su+sl,6);
+    usum=su; lsum=sl; msum=su+sl;
+    label='字占'; inputs=`上${su}画 / 下${sl}画 · 「${g('i_word').value||'—'}」`;
+  }else if(curMethod==='meas'){
+    const m1=+g('i_m1').value,m2=+g('i_m2').value;
+    if(!m1&&!m2) return toast('请填数值');
+    if(measMode==='zhang'){upper=mod(m1,8);lower=mod(m2,8);moving=mod(m1+m2,6);label='丈尺占';inputs=`${m1}丈${m2}尺`;usum=m1;lsum=m2;msum=m1+m2;}
+    else{const sh=valShi();upper=mod(m1,8);lower=mod(m2,8);moving=mod(m1+m2+sh,6);label='尺寸占';inputs=`${m1}尺${m2}寸 + 时`;usum=m1;lsum=m2;msum=m1+m2+sh;}
+  }else if(curMethod==='hou'){
+    const wu=+g('i_wu').value,dir=+g('i_dir').value,sh=valShi();
+    upper=wu;lower=dir;moving=mod(wu+dir+sh,6);
+    usum=wu; lsum=dir; msum=wu+dir+sh;
+    label='后天端法'; inputs=`物${GUA[wu].n} · ${DIR.find(d=>d[1]==dir)[0]}方 + 时`;
+  }else if(curMethod==='obsv'){
+    const u=+g('i_ou').value,l=+g('i_ol').value,sh=valShi();
+    upper=u;lower=l;moving=mod(u+l+sh,6);
+    usum=u; lsum=l; msum=u+l+sh;
+    label='观象起卦'; inputs=`上${GUA[u].n} · 下${GUA[l].n} + 时`;
+  }
+  }catch(e){return toast('输入有误，请检查');}
+  const question=((document.getElementById('i_question')||{}).value||'').trim();
+  const ying=((document.getElementById('i_ying')||{}).value||'').trim();
+  lastCast={upper,lower,moving,month,label,inputs,question,ying,calc:{usum,lsum,msum}};
+  const gc=question?guessCat(question):null;
+  curCat = gc || '（不限）';
+  lastDerive=deriveHexagram(upper,lower,moving,month);
+  renderResult();
+  setTimeout(()=>{const rv=document.querySelector('#resultArea .reveal');if(rv)rv.classList.add('go');
+    document.getElementById('resultArea').scrollIntoView({behavior:'smooth',block:'start'});},40);
+}
+
+function renderResult(){
+  const d=lastDerive,c=lastCast;
+  const rd=buildReading(d,curCat==='（不限）'?null:curCat, c.question);
+  const ti=GUA[d.tiNum],yong=GUA[d.yongNum];
+  const relCls={good:'rel-good',bad:'rel-bad',neu:'rel-neu'};
+  function relLine(label,rel,trig){return `<div class="kv"><span class="k">${label}　${GUA[trig].n}（${GUA[trig].wx}）</span><span class="vv ${relCls[rel.c]}">${rel.d}</span></div>`;}
+
+  let yingBlock='';
+  if(c.ying){
+    const yr=yingReading(d);
+    const detail = (yr&&yr.parts.length) ? yr.parts.map(p=>`<span class="${relCls[p.cls]||''}">${p.txt}</span>`).join('；')+'。' : '已交 AI 结合卦象而断。';
+    yingBlock=`<div class="sect-label">外应 · 结合而断</div>
+      <div class="card pad"><div class="prose" style="font-size:16px;">${esc(c.ying)}</div>
+      <div class="divider"></div><div class="prose" style="font-size:14.5px;">${detail}</div>
+      <div class="muted" style="margin-top:8px;">外应五行生体则吉、克体则凶，并参其象之吉凶。自动归类未必精准，请以临占所见自定。</div></div>`;
+  }
+
+  let ai='';
+  const key=(document.getElementById('dsKey')||{}).value||'';
+  ai=`<div class="deepbox">
+        <div class="dh">✦ AI 深度解卦${key?'':'<span class="badge">需设置 Key</span>'}</div>
+        <div class="muted" style="margin:6px 0 4px;">在体用骨架之上，调取${key?'DeepSeek':'AI'}依梅花正法作自然语言深解。</div>
+        <button class="btn sm" style="margin-top:8px;" id="aiBtn">${key?'用 DeepSeek 深度解卦':'未设 Key · 用演示模型试跑'}</button>
+        <div id="aiOut"></div>
+        <span class="collapse" id="showPrompt">查看将发送给 AI 的内容 ▾</span>
+        <div id="promptBox" style="display:none;"></div>
+      </div>`;
+
+  document.getElementById('resultArea').innerHTML=`
+    ${c.question?`<div class="sect-label">所占之事</div>
+     <div class="card pad" style="margin-top:6px;"><div class="prose" style="font-size:16px;">${esc(c.question)}</div></div>`:''}
+    <div class="sect-label">卦象 · ${c.label}</div>
+    <div class="card pad">
+      <div class="reveal">
+        <div class="gua-wrap">
+          ${hexColHTML('本卦',d.ben.six,d.ben.upper,d.ben.lower,{markTiYong:true,lowerIsYong:d.lowerIsYong,moving:d.moving})}
+          ${hexColHTML('互卦',d.hu.six,d.hu.upper,d.hu.lower,{})}
+          ${hexColHTML('变卦',d.bian.six,d.bian.upper,d.bian.lower,{})}
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:12px;font-size:13px;color:var(--label2);">
+        <span class="tag ti">体 ${ti.n}</span>　<span class="tag yong">用 ${yong.n}</span>　
+        <span style="color:var(--bad);">○ 动爻 第${d.moving}爻</span>${d.huNote?'　'+d.huNote:''}
+      </div>
+      <div class="muted" style="text-align:center;margin-top:8px;">${c.inputs}</div>
+    </div>
+
+    <div class="sect-label">起卦演算 · 取余核对</div>
+    <div class="card pad">${calcRows()}
+      <div class="muted" style="margin-top:10px;">卦以八除（余0取8·坤），爻以六除（余0取6·上爻）。</div>
+    </div>
+
+    <div class="sect-label">体用生克 · 旺衰</div>
+    <div class="card pad">
+      <div class="kv"><span class="k">体卦（我 · 所占之主）</span><span class="vv">${ti.n} · ${ti.wx}${d.ws?'（'+(d.ws.t)+'）':''}</span></div>
+      <div class="kv"><span class="k">用卦（事 · 所占之应）</span><span class="vv">${yong.n} · ${yong.wx}</span></div>
+      ${relLine('用卦对体',d.rel.用,d.yongNum)}
+      ${relLine('互卦（体之互）对体',d.rel.体互,d.parts.tiHu)}
+      ${relLine('变卦对体',d.rel.变,d.parts.bianTrig)}
+    </div>
+
+    <div class="sect-label">断辞 · 详断<span class="badge">仅供参证</span></div>
+    <div class="card pad">
+      ${rd.question?`<div class="muted" style="margin-bottom:10px;">所问：${esc(rd.question)}</div>`:''}
+      <div class="prose">【总断 · ${rd.verdict}】${rd.gist}${rd.yongImg?'<br><span style="font-size:14px;color:var(--label2)">'+rd.yongImg+'</span>':''}</div>
+      ${rd.wsTxt?'<div class="divider"></div><div class="prose" style="font-size:15.5px;">【强弱】'+rd.wsTxt+'</div>':''}
+      <div class="divider"></div>
+      <div class="prose" style="font-size:15.5px;">【过程 · 互卦】${rd.procTxt}</div>
+      <div class="divider"></div>
+      <div class="prose" style="font-size:15.5px;">【结果 · 变卦】${rd.resTxt}</div>
+      ${rd.leiTxt?'<div class="divider"></div><div class="prose" style="font-size:15.5px;">【类象引申】'+rd.leiTxt+'</div>':''}
+      ${rd.timeTxt?'<div class="divider"></div><div class="prose" style="font-size:14px;color:var(--label2)">【应期 · 方位】'+rd.timeTxt+'（'+rd.timeRule+'）</div>':''}
+      <div class="muted" style="margin-top:12px;">以上为依体用生克、互变、旺衰之法的详细归纳；仍以卦理与外应自断为要。如设 DeepSeek，可下行「AI 深度解卦」得更贴题之解。</div>
+    </div>
+
+    ${yingBlock}
+    <div class="sect-label">所占之类 · 占断对照</div>
+    <div class="scroller" id="catChips">${CATS.map(c2=>`<button class="chip ${c2===curCat?'on':''}" data-c="${c2}">${c2}</button>`).join('')}</div>
+    <div class="card pad" id="catText">${catTextHTML(curCat)}</div>
+
+    ${ai}
+  `;
+  // bind
+  document.querySelectorAll('#catChips .chip').forEach(b=>b.onclick=()=>{curCat=b.dataset.c;renderResult();
+    setTimeout(()=>document.querySelector('.sect-label:nth-of-type(1)'),0);});
+  document.getElementById('aiBtn').onclick=runAI;
+  document.getElementById('showPrompt').onclick=()=>{const pb=document.getElementById('promptBox');const sp=document.getElementById('showPrompt');
+    if(pb.style.display==='none'){pb.innerHTML='<pre class="prompt">'+esc(buildPrompt().user)+'</pre>';pb.style.display='block';sp.textContent='收起 ▴';}
+    else{pb.style.display='none';sp.textContent='查看将发送给 AI 的内容 ▾';}};
+}
+function catTextHTML(cat){
+  if(cat==='（不限）') return '<div class="muted">选择所占之事，调取《梅花易数》对应占断原文。</div>';
+  const map={'求财':'求财','婚姻':'婚姻','疾病':'疾病','家宅':'家宅','求名':'求名','谋望':'求谋','出行':'出行','生产':'生产','交易':'交易','谒见':'谒见','官讼':'官讼','坟墓':'坟墓','行人':'行人','失物':'失物','饮食':'饮食','天时':'天时'};
+  const name=map[cat]||cat;
+  const item=(MH.divination||[]).find(x=>x.name===name);
+  if(!item) return '<div class="muted">—</div>';
+  return `<div class="prose cls">${item.text}</div>`;
+}
+
+/* ================= DeepSeek / 演示 ================= */
+const DEFAULT_PROMPT=`你是一位精通《梅花易数》的解卦师。请严格依据梅花易数「体用生克」之法解卦，不可套用六爻、八字或西洋占星，也不要泛泛而谈。
+
+解卦纲要：
+1. 以体卦为主（求测者自身），用卦为所占之事；
+2. 用生体为进益之喜，用克体为凶咎阻逆，体生用为耗失，体克用为可成但稍迟，体用比和为吉；
+3. 兼看互卦（事之中间过程）、变卦（事之结果趋向）对体卦的生克；
+4. 参以体卦当令之旺衰：旺则吉力强，衰则需生扶；
+5. 引八卦类象，就所问之事作具体引申（方位、人事、物象、应期）；
+6. 语言简练中正：先断吉凶大势，再述过程与应期方位，最后给出可行建议；
+7. 若有外应（占时所见所闻之兆），须结合外应之五行生克与吉凶之象，以验证或调整断语。
+
+不确定处宁可存疑，不可妄断。`;
+
+function buildPrompt(){
+  const d=lastDerive,c=lastCast,ti=GUA[d.tiNum],yong=GUA[d.yongNum];
+  const catName=curCat==='（不限）'?'综合':curCat;
+  const tiLei=MH.trigrams_detail&&MH.trigrams_detail[ti.k]?MH.trigrams_detail[ti.k]._props:{};
+  const yongLei=MH.trigrams_detail&&MH.trigrams_detail[yong.k]?MH.trigrams_detail[yong.k]._props:{};
+  const divItem=(MH.divination||[]).find(x=>x.name===(curCat==='谋望'?'求谋':curCat));
+  const u=
+`【所问之事】${c.question||'（未填，按所占之类综合而断）'}
+【所占之类】${catName}
+【起卦方式】${c.label}（${c.inputs}）
+
+【卦象】
+· 本卦：${G64[d.ben.upper][d.ben.lower]}（上${GUA[d.ben.upper].n}下${GUA[d.ben.lower].n}）
+· 互卦：${G64[d.hu.upper][d.hu.lower]}（上${GUA[d.hu.upper].n}下${GUA[d.hu.lower].n}）${d.huNote||''}
+· 变卦：${G64[d.bian.upper][d.bian.lower]}（上${GUA[d.bian.upper].n}下${GUA[d.bian.lower].n}）
+· 动爻：第${d.moving}爻
+
+【体用】
+· 体卦：${ti.n}（五行${ti.wx}${d.ws?'，当月'+d.ws.t:''}）
+· 用卦：${yong.n}（五行${yong.wx}）
+· 用卦对体：${d.rel.用.d}
+· 互卦对体：${d.rel.体互.d}
+· 变卦对体：${d.rel.变.d}
+
+【体卦类象·${ti.n}】${tiLei['人事']||''}${tiLei['静物']?'；'+tiLei['静物']:''}
+【用卦类象·${yong.n}】${yongLei['人事']||''}
+${divItem?'【'+divItem.name+'占·古法】'+divItem.text:''}
+${(function(){const yr=yingReading(d);if(!yr)return '';const tag=yr.parts.map(p=>p.plain).join('，');return '\n【外应】'+c.ying+(tag?'（'+tag+'）':'')+'\n请将此外应结合卦象一并参断：外应之五行生体则吉、克体则凶；并据其象之吉凶（如云开见日为吉，烟雾、哀鸣、坠落为凶，物圆事成、物缺事败）以验证或调整断语。';})()}
+
+请依梅花体用之法，紧扣【所问之事】详解此卦：先断此事之吉凶成败，再述过程、应期与方位，最后给出可行建议。`;
+  return {system:(document.getElementById('dsPrompt')||{}).value||DEFAULT_PROMPT, user:u};
+}
+
+async function runAI(){
+  const out=document.getElementById('aiOut');
+  const key=(document.getElementById('dsKey')||{}).value.trim();
+  const {system,user}=buildPrompt();
+  out.innerHTML=`<div class="muted" style="margin-top:10px;"><span class="spin"></span> 正在解卦…</div>`;
+  try{
+    let text;
+    if(key){ text=await callDeepSeek(key,system,user); }
+    else { text=await callClaudeDemo(system,user); }
+    out.innerHTML=`<div class="divider"></div><div class="prose" style="font-size:15.5px;">${esc(text).replace(/\n/g,'<br>')}</div>
+      <div class="muted" style="margin-top:8px;">${key?'由 DeepSeek 生成':'由演示模型生成（正式版用你的 DeepSeek）'}，仅供参证。</div>`;
+  }catch(e){
+    out.innerHTML=`<div class="divider"></div><div class="muted" style="line-height:1.7;">
+      ⚠︎ 此预览环境无法外连网络，<b style="color:var(--label)">AI 深度解卦将在手机正式版生效</b>。<br>
+      你可点上方「查看将发送给 AI 的内容」核对解卦提示词的质量，或复制到 DeepSeek 应用中先行试解。<br><span style="opacity:.6">(${esc(String(e.message||e)).slice(0,80)})</span></div>`;
+  }
+}
+// 原生网络桥：仅在打包后的 App 内生效（绕开 WebView 跨域限制）；聊天预览无 AndroidNet，自动走 fetch
+window.__netPending={};
+window.__netResult=function(id,code,text){const p=window.__netPending[id];if(!p)return;delete window.__netPending[id];p({code:code,text:text});};
+function nativePost(url,auth,body){return new Promise(res=>{const id='r'+Date.now()+Math.random().toString(36).slice(2);window.__netPending[id]=res;window.AndroidNet.httpPost(id,url,auth||'',body);});}
+const HAS_NATIVE=!!(window.AndroidNet&&window.AndroidNet.httpPost);
+
+async function callDeepSeek(key,system,user){
+  const body=JSON.stringify({model:'deepseek-chat',messages:[{role:'system',content:system},{role:'user',content:user}],temperature:0.7});
+  if(HAS_NATIVE){
+    const {code,text}=await nativePost('https://api.deepseek.com/chat/completions','Bearer '+key,body);
+    if(!code) throw new Error('网络失败'+(text?'：'+String(text).slice(0,60):''));
+    if(code<200||code>=300) throw new Error('DeepSeek '+code+(text?'：'+String(text).slice(0,80):''));
+    const j=JSON.parse(text); return j.choices[0].message.content;
+  }
+  const r=await fetch('https://api.deepseek.com/chat/completions',{method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:body});
+  if(!r.ok) throw new Error('DeepSeek '+r.status);
+  const j=await r.json(); return j.choices[0].message.content;
+}
+async function callClaudeDemo(system,user){
+  const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:1000,messages:[{role:'user',content:system+'\n\n'+user}]})});
+  if(!r.ok) throw new Error('demo '+r.status);
+  const j=await r.json(); return (j.content||[]).map(x=>x.text||'').join('\n');
+}
+
+/* ================= 速查 / 占断 / 原文 ================= */
+function renderBagua(){
+  document.getElementById('baguaGrid').innerHTML=[1,2,3,4,5,6,7,8].map(n=>{
+    const g=GUA[n];const lei=(MH.leixiang_simple&&MH.leixiang_simple[g.k]||'').slice(0,12);
+    return `<div class="bg-cell" data-bg="${n}"><div class="sy">${g.sym}</div><div><div class="nm">${g.n} · ${g.img}</div><div class="mt">${g.wx} · ${lei}…</div></div></div>`;
+  }).join('');
+  document.querySelectorAll('[data-bg]').forEach(c=>c.onclick=()=>openTrigram(+c.dataset.bg));
+}
+function openTrigram(n){
+  const g=GUA[n],k=g.k;const det=MH.trigrams_detail&&MH.trigrams_detail[k];
+  const lei=MH.leixiang_simple&&MH.leixiang_simple[k]; const wan=MH.wanwu_simple&&MH.wanwu_simple[k];
+  let props='';
+  if(det&&det._props){ props=Object.keys(det._props).map(field=>
+    `<div class="prop-row"><div class="pk">${field}</div><div class="pv">${det._props[field]}</div></div>`).join(''); }
+  const tyG=MH.tiyong&&MH.tiyong[k];
+  openSheet(`${g.n}卦 · ${g.sym} · ${g.img}`,
+    `<div class="card pad" style="margin-top:0;">
+       <div class="kv"><span class="k">卦数 / 五行</span><span class="vv">${n} · ${g.wx}</span></div>
+       <div class="kv"><span class="k">卦象</span><span class="vv">${g.sym} ${GUA[n].lines.slice().reverse().map(x=>x?'⚊':'⚋').join(' ')}</span></div>
+       ${wan?`<div class="kv" style="display:block;"><span class="k">类象</span><div class="prose cls" style="font-size:15px;margin-top:6px;">${wan}</div></div>`:''}
+     </div>
+     ${tyG?`<div class="sect-label" style="margin-top:14px;">体用之诀</div><div class="card pad">
+       ${tyG['生体']?`<div style="margin-bottom:8px;"><span class="tag" style="background:var(--good);color:#fff;">生体</span><div class="prose cls" style="font-size:15px;margin-top:6px;">${tyG['生体']}</div></div>`:''}
+       ${tyG['克体']?`<div><span class="tag" style="background:var(--bad);color:#fff;">克体</span><div class="prose cls" style="font-size:15px;margin-top:6px;">${tyG['克体']}</div></div>`:''}
+     </div>`:''}
+     ${props?`<div class="sect-label" style="margin-top:14px;">万物属类（详）</div><div class="card pad">${props}</div>`:''}
+  `);
+}
+function renderDiv(){
+  document.getElementById('divList').innerHTML=(MH.divination||[]).map((x,i)=>
+    `<div class="li" data-d="${i}"><div class="lead">${cn(i+1)}</div><div class="t">${x.name}占</div><div class="chev">›</div></div>`).join('');
+  document.querySelectorAll('[data-d]').forEach(li=>li.onclick=()=>{const x=MH.divination[+li.dataset.d];
+    openSheet(x.name+'占',`<div class="prose cls">${x.text}</div>`);});
+}
+function renderText(){
+  const items=[];
+  items.push({t:'序',body:`<div class="prose cls">${MH.xu||''}</div>`});
+  items.push({t:'起卦法 · 总要',body:`<div class="prose cls">
+    <b>卦以八除</b>：凡起卦不问数多少，即以此数作卦数，过八即以八递除，以余数作卦；得八整即坤卦。<br><br>
+    <b>爻以六除</b>：以重卦总数除六，余数作动爻；不满六止用此数。一爻动，则阳变阴、阴变阳。<br><br>
+    <b>互卦</b>：去初爻及第六爻，以中间四爻分作两卦。乾坤无互，互其变卦。<br><br>
+    <b>年月日时起卦</b>：年月日为上卦，加时为下卦，年月日时总数取爻。子年一数至亥年十二数；正月一数至十二月；初一至三十；子时一数至亥时十二数。</div>`});
+  items.push({t:'八卦象例 · 取象',body:`<div class="prose cls">乾三连 ☰，坤六断 ☷，震仰盂 ☳，艮覆碗 ☶，离中虚 ☲，坎中满 ☵，兑上缺 ☱，巽下断 ☴。<br><br>离南坎北，震东兑西，人则介乎其中。</div>`});
+  (MH.examples||[]).forEach(e=>items.push({t:e.title,body:`<div class="prose cls">${e.text}</div>`,cls:'例'}));
+  document.getElementById('textList').innerHTML=items.map((it,i)=>
+    `<div class="li" data-tx="${i}">${it.cls?'<div class="lead" style="font-size:13px;color:var(--label3);">例</div>':''}<div class="t">${it.t}</div><div class="chev">›</div></div>`).join('');
+  window.__textItems=items;
+  document.querySelectorAll('[data-tx]').forEach(li=>li.onclick=()=>{const it=window.__textItems[+li.dataset.tx];openSheet(it.t,it.body);});
+}
+
+/* ================= sheet / tabs / misc ================= */
+function openSheet(title,html){document.getElementById('sheetTitle').textContent=title;document.getElementById('sheetBody').innerHTML=html;
+  document.getElementById('sheetBg').classList.add('show');document.getElementById('sheet').classList.add('show');}
+function closeSheet(){document.getElementById('sheetBg').classList.remove('show');document.getElementById('sheet').classList.remove('show');}
+document.getElementById('sheetClose').onclick=closeSheet;document.getElementById('sheetBg').onclick=closeSheet;
+
+let toastT;
+function toast(msg){let t=document.getElementById('__toast');if(!t){t=document.createElement('div');t.id='__toast';
+  t.style.cssText='position:fixed;left:50%;bottom:120px;transform:translateX(-50%);background:rgba(0,0,0,.82);color:#fff;padding:11px 18px;border-radius:12px;font-size:14px;z-index:200;transition:opacity .25s;max-width:80%;text-align:center;';
+  document.body.appendChild(t);}t.textContent=msg;t.style.opacity='1';clearTimeout(toastT);toastT=setTimeout(()=>t.style.opacity='0',1800);}
+function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+
+const TABS=[
+ {id:'cast',label:'起卦',big:'天意',sub:'梅花易数 · 观象起卦',icon:'M12 2l2.4 6.6L21 9l-5 4.5L17.5 21 12 17l-5.5 4 1.5-7.5L3 9l6.6-.4z'},
+ {id:'lookup',label:'速查',big:'速查',sub:'八卦 · 类象 · 五行',icon:'M4 5h16M4 12h16M4 19h10'},
+ {id:'div',label:'占断',big:'占断',sub:'十八类 · 体用生克',icon:'M6 3h9l5 5v13H6zM15 3v5h5'},
+ {id:'text',label:'原文',big:'原文',sub:'梅花易数 · 全本',icon:'M5 4h11a3 3 0 013 3v13H8a3 3 0 01-3-3zM5 4v13'},
+ {id:'set',label:'设置',big:'设置',sub:'AI 解卦 · 外观',icon:'M12 9a3 3 0 100 6 3 3 0 000-6zM19 12l1.5-1-1.5-3-1.8.6-1.6-1-.4-1.9h-3.4l-.4 1.9-1.6 1-1.8-.6L3.5 8 5 9a6 6 0 000 6L3.5 16 5 19l1.8-.6 1.6 1 .4 1.9h3.4l.4-1.9 1.6-1 1.8.6 1.5-3-1.5-1a6 6 0 000-2z'},
+];
+function renderTabs(){
+  document.getElementById('tabbar').innerHTML=TABS.map(t=>
+    `<button class="tab ${t.id==='cast'?'on':''}" data-tab="${t.id}">
+       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="${t.icon}"/></svg>${t.label}</button>`).join('');
+  document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>switchTab(b.dataset.tab));
+}
+function switchTab(id){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('v-'+id).classList.add('active');
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.tab===id));
+  const t=TABS.find(x=>x.id===id);
+  document.getElementById('navBig').textContent=t.big;document.getElementById('navSub').textContent=t.sub;
+  window.scrollTo(0,0);
+}
+
+/* theme */
+function setTheme(mode){
+  if(mode==='auto') document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme',mode);
+  document.querySelectorAll('[data-th]').forEach(b=>b.classList.toggle('on',b.dataset.th===mode));
+  curTheme=mode;
+}
+let curTheme='auto';
+document.getElementById('themeBtn').onclick=()=>{const order=['auto','light','dark'];setTheme(order[(order.indexOf(curTheme)+1)%3]);toast('主题：'+({auto:'自动',light:'浅色',dark:'深色'}[curTheme]));};
+document.querySelectorAll('[data-th]').forEach(b=>b.onclick=()=>setTheme(b.dataset.th));
+
+/* settings prompt */
+document.getElementById('dsPrompt').value=DEFAULT_PROMPT;
+document.getElementById('resetPrompt').onclick=()=>{document.getElementById('dsPrompt').value=DEFAULT_PROMPT;if(window.AndroidNet&&window.AndroidNet.save)try{window.AndroidNet.save('dsPrompt',DEFAULT_PROMPT);}catch(_){}toast('已恢复默认提示词');};
+// App 内持久化（聊天预览无 AndroidNet 则仅本会话有效）
+if(window.AndroidNet&&window.AndroidNet.load){
+  try{ const k=window.AndroidNet.load('dsKey'); if(k) document.getElementById('dsKey').value=k;
+       const p=window.AndroidNet.load('dsPrompt'); if(p) document.getElementById('dsPrompt').value=p; }catch(_){}
+}
+document.getElementById('dsKey').addEventListener('input',e=>{if(window.AndroidNet&&window.AndroidNet.save)try{window.AndroidNet.save('dsKey',e.target.value);}catch(_){}});
+document.getElementById('dsPrompt').addEventListener('input',e=>{if(window.AndroidNet&&window.AndroidNet.save)try{window.AndroidNet.save('dsPrompt',e.target.value);}catch(_){}});
+
+/* init */
+renderMethodChips();renderMethodPanel();renderBagua();renderDiv();renderText();renderTabs();
+document.querySelectorAll('#methodChips .chip').forEach(()=>{});
+document.getElementById('methodChips').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;curMethod=b.dataset.m;renderMethodChips();renderMethodPanel();});
+</script>
+</body>
+</html>
